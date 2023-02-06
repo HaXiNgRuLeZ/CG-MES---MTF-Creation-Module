@@ -278,6 +278,7 @@ Public Class frmMain
             btnMPN.Enabled = False
         Else
             frmMainPN.dgvMPN.Rows.Clear()
+            'INSERT MAIN
             SQL.AddParam("@id", "%" & SelectedModelID & "M%")
             SQL.ExecQuery("SELECT part_numbers.pn, part_numbers.pn_dsc, vw_wms_stock.balance_qty " &
                           "FROM part_numbers " &
@@ -289,8 +290,9 @@ Public Class frmMain
             If SQL.HasException(True) Then Exit Sub
 
             If SQL.RecordCount > 0 Then
-                Dim counter As Integer
-                'INSERT MAIN
+                Dim counter1 As Integer
+                Dim counter2 As Integer = SQL.RecordCount
+
                 For i As Integer = 1 To SQL.RecordCount
                     Dim qty As Integer
                     Dim result As Boolean
@@ -298,7 +300,7 @@ Public Class frmMain
                     If SQL.DBDT.Rows(i - 1)("balance_qty") Is DBNull.Value Then
                         qty = 0
                         result = False
-                        counter += 1
+                        counter1 += 1
                     Else
                         qty = SQL.DBDT.Rows(i - 1)("balance_qty")
                         result = True
@@ -330,9 +332,8 @@ Public Class frmMain
                     Next
                 Next
 
-                    btnMPN.Text = SQL.RecordCount - counter & " / " & SQL.RecordCount & " Parts Selected"
+                btnMPN.Text = SQL.RecordCount - counter1 & " / " & counter2 & " Parts Selected"
                 btnMPN.Enabled = True
-                LoadOtherData()
             Else
                 btnMPN.Text = "---"
                 btnMPN.Enabled = False
@@ -341,27 +342,13 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub LoadOtherData()
-        'SQL.AddParam("@id", "%" & SelectedModelID & "M%")
-
-        'For Each row In frmMainPN.dgvMPN.Rows
-        '    Dim PN As String = row.Cells("Part Number").Value
-        '    For Each rowA In SQL.DBDT.Rows
-        '        Dim PNA As String = rowA("pn")
-        '        If PNA = PN Then
-        '            row.Cells("Loose Quantity").Value = rowA("LQ")
-        '            Exit For
-        '        End If
-        '    Next
-        'Next
-    End Sub
-
     Private Sub LoadDatatofrmAPN()
         If cbxModel.Text = "[SELECT MODEL]" Then
-            btnMPN.Text = "---"
-            btnMPN.Enabled = False
+            btnAPN.Text = "---"
+            btnAPN.Enabled = False
         Else
             frmAlternatePN.dgvAPN.Rows.Clear()
+            'INSERT MAIN
             SQL.AddParam("@id", "%" & SelectedModelID & "A%")
             SQL.ExecQuery("SELECT part_numbers.pn, part_numbers.pn_dsc, part_numbers.dsc, " &
                           "vw_wms_stock.balance_qty FROM part_numbers " &
@@ -373,6 +360,8 @@ Public Class frmMain
             If SQL.HasException(True) Then Exit Sub
 
             If SQL.RecordCount > 0 Then
+                Dim counter As Integer = SQL.RecordCount
+
                 For i As Integer = 1 To SQL.RecordCount
                     Dim qty As Integer
 
@@ -386,7 +375,30 @@ Public Class frmMain
                                                                 SQL.DBDT.Rows(i - 1)("dsc"), SQL.DBDT.Rows(i - 1)("pn_dsc"),
                                                                 0, 0, 1, 0, qty})
                 Next
-                btnAPN.Text = "0" & " / " & SQL.RecordCount & " Parts Selected"
+                'INSERT LOOSE
+                SQL.AddParam("@id", "%" & SelectedModelID & "A%")
+                SQL.ExecQuery("SELECT part_numbers.pn, SUM(materials.qty) as LQ " &
+                              "FROM materials " &
+                              "INNER JOIN part_numbers " &
+                              "ON materials.pn = part_numbers.pn " &
+                              "WHERE part_numbers.MesCode LIKE @id AND materials.Cell_id LIKE '%A%' " &
+                              "AND materials.qty < part_numbers.MPQ " &
+                              "GROUP BY part_numbers.pn")
+
+                If SQL.HasException(True) Then Exit Sub
+
+                For Each row In frmAlternatePN.dgvAPN.Rows
+                    Dim PN As String = row.Cells("Alternate Part Number").Value
+                    For Each rowA In SQL.DBDT.Rows
+                        Dim PNA As String = rowA("pn")
+                        If PNA = PN Then
+                            row.Cells("Loose Quantity").Value = rowA("LQ")
+                            Exit For
+                        End If
+                    Next
+                Next
+
+                btnAPN.Text = "0" & " / " & counter & " Parts Selected"
                 btnAPN.Enabled = True
             Else
                 btnAPN.Text = "---"
