@@ -309,12 +309,28 @@ Public Class frmMain
                 Next
                 btnMPN.Text = SQL.RecordCount - counter & " / " & SQL.RecordCount & " Parts Selected"
                 btnMPN.Enabled = True
+                LoadOtherData()
             Else
                 btnMPN.Text = "---"
                 btnMPN.Enabled = False
             End If
             ModelLoadFlag = True
         End If
+    End Sub
+
+    Private Sub LoadOtherData()
+        SQL.AddParam("@id", "%" & SelectedModelID & "M%")
+
+        For Each row In frmMainPN.dgvMPN.Rows
+            Dim PN As String = row.Cells("Part Number").Value
+            For Each rowA In SQL.DBDT.Rows
+                Dim PNA As String = rowA("pn")
+                If PNA = PN Then
+                    row.Cells("Loose Quantity").Value = rowA("LQ")
+                    Exit For
+                End If
+            Next
+        Next
     End Sub
 
     Private Sub LoadDatatofrmAPN()
