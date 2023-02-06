@@ -290,7 +290,7 @@ Public Class frmMain
 
             If SQL.RecordCount > 0 Then
                 Dim counter As Integer
-
+                'INSERT MAIN
                 For i As Integer = 1 To SQL.RecordCount
                     Dim qty As Integer
                     Dim result As Boolean
@@ -307,7 +307,30 @@ Public Class frmMain
                     frmMainPN.dgvMPN.Rows.Add(New Object() {result, i.ToString + ".", SQL.DBDT.Rows(i - 1)("pn"),
                                                             SQL.DBDT.Rows(i - 1)("pn_dsc"), 0, 0, 1, 0, qty})
                 Next
-                btnMPN.Text = SQL.RecordCount - counter & " / " & SQL.RecordCount & " Parts Selected"
+                'INSERT LOOSE
+                SQL.AddParam("@id", "%" & SelectedModelID & "M%")
+                SQL.ExecQuery("SELECT part_numbers.pn, SUM(materials.qty) as LQ " &
+                              "FROM materials " &
+                              "INNER JOIN part_numbers " &
+                              "ON materials.pn = part_numbers.pn " &
+                              "WHERE part_numbers.MesCode LIKE @id AND materials.Cell_id LIKE '%A%' " &
+                              "AND materials.qty < part_numbers.MPQ " &
+                              "GROUP BY part_numbers.pn")
+
+                If SQL.HasException(True) Then Exit Sub
+
+                For Each row In frmMainPN.dgvMPN.Rows
+                    Dim PN As String = row.Cells("Part Number").Value
+                    For Each rowA In SQL.DBDT.Rows
+                        Dim PNA As String = rowA("pn")
+                        If PNA = PN Then
+                            row.Cells("Loose Quantity").Value = rowA("LQ")
+                            Exit For
+                        End If
+                    Next
+                Next
+
+                    btnMPN.Text = SQL.RecordCount - counter & " / " & SQL.RecordCount & " Parts Selected"
                 btnMPN.Enabled = True
                 LoadOtherData()
             Else
@@ -319,18 +342,18 @@ Public Class frmMain
     End Sub
 
     Private Sub LoadOtherData()
-        SQL.AddParam("@id", "%" & SelectedModelID & "M%")
+        'SQL.AddParam("@id", "%" & SelectedModelID & "M%")
 
-        For Each row In frmMainPN.dgvMPN.Rows
-            Dim PN As String = row.Cells("Part Number").Value
-            For Each rowA In SQL.DBDT.Rows
-                Dim PNA As String = rowA("pn")
-                If PNA = PN Then
-                    row.Cells("Loose Quantity").Value = rowA("LQ")
-                    Exit For
-                End If
-            Next
-        Next
+        'For Each row In frmMainPN.dgvMPN.Rows
+        '    Dim PN As String = row.Cells("Part Number").Value
+        '    For Each rowA In SQL.DBDT.Rows
+        '        Dim PNA As String = rowA("pn")
+        '        If PNA = PN Then
+        '            row.Cells("Loose Quantity").Value = rowA("LQ")
+        '            Exit For
+        '        End If
+        '    Next
+        'Next
     End Sub
 
     Private Sub LoadDatatofrmAPN()
@@ -351,8 +374,17 @@ Public Class frmMain
 
             If SQL.RecordCount > 0 Then
                 For i As Integer = 1 To SQL.RecordCount
+                    Dim qty As Integer
 
-                    frmAlternatePN.dgvAPN.Rows.Add(New Object() {0, i.ToString + "."})
+                    If SQL.DBDT.Rows(i - 1)("balance_qty") Is DBNull.Value Then
+                        qty = 0
+                    Else
+                        qty = SQL.DBDT.Rows(i - 1)("balance_qty")
+                    End If
+
+                    frmAlternatePN.dgvAPN.Rows.Add(New Object() {0, i.ToString + ".", SQL.DBDT.Rows(i - 1)("pn"),
+                                                                SQL.DBDT.Rows(i - 1)("dsc"), SQL.DBDT.Rows(i - 1)("pn_dsc"),
+                                                                0, 0, 1, 0, qty})
                 Next
                 btnAPN.Text = "0" & " / " & SQL.RecordCount & " Parts Selected"
                 btnAPN.Enabled = True

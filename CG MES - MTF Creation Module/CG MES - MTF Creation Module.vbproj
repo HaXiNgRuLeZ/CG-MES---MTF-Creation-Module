@@ -155,11 +155,7 @@
   <ItemGroup>
     <Content Include="pcb-board.ico" />
     <None Include="Resources\apply.png" />
-    <None Include="Resources\refresh-page-option_8_3.png" />
     <None Include="Resources\refresh.png" />
-    <None Include="Resources\refresh-page-option_4_2.png" />
-    <None Include="Resources\refresh-page-option_11.png" />
-    <None Include="Resources\refresh-page-option_1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
