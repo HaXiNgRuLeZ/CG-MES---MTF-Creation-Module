@@ -1,0 +1,2 @@
+cd /d "C:\Users\STORE B\Documents\Visual Studio 2017\Projects\CG MES - MTF Creation Module\CG MES - MTF Creation Module" &msbuild "CG MES - MTF Creation Module.vbproj" /t:sdvViewer /p:configuration="Debug" /p:platform="Any CPU" /p:SolutionDir="C:\Users\STORE B\Documents\Visual Studio 2017\Projects\CG MES - MTF Creation Module" 
+exit %errorlevel% 

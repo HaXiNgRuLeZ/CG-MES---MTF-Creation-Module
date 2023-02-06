@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32901.82
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "CG MES - MTF Creation Module", "CG MES - MTF Creation Module\CG MES - MTF Creation Module.vbproj", "{3F602F46-C0FC-434C-86E6-DB658916D652}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3F602F46-C0FC-434C-86E6-DB658916D652}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F602F46-C0FC-434C-86E6-DB658916D652}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F602F46-C0FC-434C-86E6-DB658916D652}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F602F46-C0FC-434C-86E6-DB658916D652}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD5E2423-D87F-47BB-9049-9E11DF19F102}
+	EndGlobalSection
+EndGlobal
