@@ -308,6 +308,12 @@ Public Class frmMain
 
                     frmMainPN.dgvMPN.Rows.Add(New Object() {result, i.ToString + ".", SQL.DBDT.Rows(i - 1)("pn"),
                                                             SQL.DBDT.Rows(i - 1)("pn_dsc"), 0, 0, 1, 0, qty})
+
+                    If qty = 0 Then
+                        For j As Integer = 1 To frmMainPN.dgvMPN.Columns.Count
+                            frmMainPN.dgvMPN.Rows(frmMainPN.dgvMPN.Rows.Count - 1).Cells(j - 1).Style.BackColor = Color.FromArgb(255, 192, 192)
+                        Next
+                    End If
                 Next
                 'INSERT LOOSE
                 SQL.AddParam("@id", "%" & SelectedModelID & "M%")
@@ -374,6 +380,12 @@ Public Class frmMain
                     frmAlternatePN.dgvAPN.Rows.Add(New Object() {0, i.ToString + ".", SQL.DBDT.Rows(i - 1)("pn"),
                                                                 SQL.DBDT.Rows(i - 1)("dsc"), SQL.DBDT.Rows(i - 1)("pn_dsc"),
                                                                 0, 0, 1, 0, qty})
+
+                    If qty = 0 Then
+                        For j As Integer = 1 To frmAlternatePN.dgvAPN.Columns.Count
+                            frmAlternatePN.dgvAPN.Rows(frmAlternatePN.dgvAPN.Rows.Count - 1).Cells(j - 1).Style.BackColor = Color.FromArgb(255, 192, 192)
+                        Next
+                    End If
                 Next
                 'INSERT LOOSE
                 SQL.AddParam("@id", "%" & SelectedModelID & "A%")
