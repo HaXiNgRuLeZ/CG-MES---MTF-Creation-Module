@@ -55,6 +55,7 @@ Public Class frmMain
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         dgvMTF.DoubleBuffered(True)
         frmMainPN.dgvMPN.DoubleBuffered(True)
+        frmAlternatePN.dgvAPN.DoubleBuffered(True)
         SetupDGV()
         SetupDGVMPN()
         SetupDGVAPN()
@@ -290,23 +291,23 @@ Public Class frmMain
             If SQL.HasException(True) Then Exit Sub
 
             If SQL.RecordCount > 0 Then
-                Dim counter1 As Integer
+                'Dim counter1 As Integer
                 Dim counter2 As Integer = SQL.RecordCount
 
                 For i As Integer = 1 To SQL.RecordCount
                     Dim qty As Integer
-                    Dim result As Boolean
+                    'Dim result As Boolean
 
                     If SQL.DBDT.Rows(i - 1)("balance_qty") Is DBNull.Value Then
                         qty = 0
-                        result = False
-                        counter1 += 1
+                        'result = False
+                        'counter1 += 1
                     Else
                         qty = SQL.DBDT.Rows(i - 1)("balance_qty")
-                        result = True
+                        'result = True
                     End If
 
-                    frmMainPN.dgvMPN.Rows.Add(New Object() {result, i.ToString + ".", SQL.DBDT.Rows(i - 1)("pn"),
+                    frmMainPN.dgvMPN.Rows.Add(New Object() {1, i.ToString + ".", SQL.DBDT.Rows(i - 1)("pn"),
                                                             SQL.DBDT.Rows(i - 1)("pn_dsc"), 0, 0, 1, 0, qty})
 
                     If qty = 0 Then
@@ -338,7 +339,7 @@ Public Class frmMain
                     Next
                 Next
 
-                btnMPN.Text = SQL.RecordCount - counter1 & " / " & counter2 & " Parts Selected"
+                btnMPN.Text = counter2 & " / " & counter2 & " Parts Selected"
                 btnMPN.Enabled = True
             Else
                 btnMPN.Text = "---"
@@ -432,7 +433,7 @@ Public Class frmMain
             End If
             frmMainPN.Text = "Product Model: " & cbxModel.Text
             frmMainPN.dgvMPN.Refresh()
-            'Me.Hide()
+            Me.Hide()
             frmMainPN.ShowDialog()
         Else
             MessageBox.Show("The Lot Quantity is required.", "Lot Quantity", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -448,7 +449,7 @@ Public Class frmMain
             End If
             frmAlternatePN.Text = "Product Model (Alternate): " & cbxModel.Text
             frmAlternatePN.dgvAPN.Refresh()
-            'Me.Hide()
+            Me.Hide()
             frmAlternatePN.ShowDialog()
         Else
             MessageBox.Show("The Lot Quantity is required.", "Lot Quantity", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
