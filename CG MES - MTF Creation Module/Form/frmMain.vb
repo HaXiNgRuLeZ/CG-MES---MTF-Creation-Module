@@ -225,9 +225,9 @@ Public Class frmMain
         End With
     End Sub
 
-    Private Sub LoadExcelFile(filePath As String)
-        Dim excelFile As FileInfo = New FileInfo(filePath)
-        Using package As ExcelPackage = New ExcelPackage(excelFile)
+    Private Sub LoadExcelFile(filePath1 As String, filePath2 As String)
+        Dim excelFile1 As FileInfo = New FileInfo(filePath1)
+        Using package As ExcelPackage = New ExcelPackage(excelFile1)
             ExcelPackage.LicenseContext = LicenseContext.Commercial
             Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Sheet1")
             Dim xlRange As ExcelRange = worksheet.Cells
@@ -397,13 +397,28 @@ Public Class frmMain
     Private Sub LoadQuantityPerMPN()
         Cursor.Current = Cursors.WaitCursor
         'make it load excel file or usage
-        Dim filePath As String = Application.StartupPath + "\Model Quantity Per\" + cbxModel.Text.Trim + "\Main PN\" + cbxModel.Text.Trim + ".xls"
-        If File.Exists(filePath) Then
-            LoadExcelFile(filePath)
+        Dim filePath1 As String = Application.StartupPath + "\Model Quantity Per\" + cbxModel.Text.Trim + "\Main PN\" + cbxModel.Text.Trim + ".xls"
+        Dim filePath2 As String = Application.StartupPath + "\Model Quantity Per\" + cbxModel.Text.Trim + "\Alternate PN\" + cbxModel.Text.Trim + ".xls"
+        'For Main PN
+        If File.Exists(filePath1) Then
+            LoadExcelFile(filePath1)
         Else
-            filePath = filePath.Replace(".xls", ".xlsx")
-            If File.Exists(filePath) Then
-                LoadExcelFile(filePath)
+            filePath1 = filePath1.Replace(".xls", ".xlsx")
+            If File.Exists(filePath1) Then
+                LoadExcelFile(filePath1)
+                frmMainPN.btnImport.Enabled = False
+            Else
+                'MessageBox.Show("Excel file not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                frmMainPN.btnImport.Enabled = True
+            End If
+        End If
+        'For Alternate PN
+        If File.Exists(filePath2) Then
+            LoadExcelFile(filePath1)
+        Else
+            filePath1 = filePath1.Replace(".xls", ".xlsx")
+            If File.Exists(filePath1) Then
+                LoadExcelFile(filePath1)
                 frmMainPN.btnImport.Enabled = False
             Else
                 'MessageBox.Show("Excel file not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)

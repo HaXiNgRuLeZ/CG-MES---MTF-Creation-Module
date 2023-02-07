@@ -25,7 +25,6 @@
     End Sub
 
     Private Sub frmMainPN_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
-
         frmMain.Show()
     End Sub
 
