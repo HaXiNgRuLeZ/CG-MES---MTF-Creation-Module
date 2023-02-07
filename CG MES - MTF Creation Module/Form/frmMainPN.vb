@@ -3,6 +3,8 @@
         Cursor.Current = Cursors.WaitCursor
         Me.Show()
         txtInput.Focus()
+        dgvMPN.ClearSelection()
+        cbxOption.SelectedIndex = 0
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -25,5 +27,23 @@
     Private Sub frmMainPN_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
 
         frmMain.Show()
+    End Sub
+
+    Private Sub txtInput_TextChanged(sender As Object, e As EventArgs) Handles txtInput.TextChanged
+        Dim columnName As String
+        columnName = If(cbxOption.Text = "Part Number", "Part Number", "Description")
+
+        For Each row As DataGridViewRow In dgvMPN.Rows
+            If txtInput.TextLength < 1 Then
+                dgvMPN.ClearSelection()
+                Exit For
+            End If
+            If row.Cells(columnName).Value.ToString().ToLower().Contains(txtInput.Text.ToLower()) Then
+                dgvMPN.ClearSelection()
+                row.Selected = True
+                dgvMPN.FirstDisplayedScrollingRowIndex = row.Index
+                Exit For
+            End If
+        Next
     End Sub
 End Class

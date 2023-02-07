@@ -65,10 +65,11 @@ Public Class frmMain
         LoadDatatoDGV()
         LoadModel()
 
-        txtJOB.Focus()
         AssignValidation(txtQTY, ValidationType.Only_Numbers)
 
         Me.Show()
+        txtJOB.Focus()
+        dgvMTF.ClearSelection()
     End Sub
 
     Private Sub btnExit_Click(sender As Object, e As EventArgs) Handles btnExit.Click
@@ -353,6 +354,12 @@ Public Class frmMain
                             frmMainPN.dgvMPN.Rows(frmMainPN.dgvMPN.Rows.Count - 1).Cells(j - 1).Style.BackColor = Color.FromArgb(255, 192, 192)
                         Next
                     End If
+
+                    For Each row As DataGridViewRow In frmMainPN.dgvMPN.Rows
+                        row.Cells(2).Style.Font = New Font(frmMainPN.dgvMPN.Font, FontStyle.Bold)
+                        row.Cells(7).Style.Font = New Font(frmMainPN.dgvMPN.Font, FontStyle.Bold)
+                        row.Cells(8).Style.Font = New Font(frmMainPN.dgvMPN.Font, FontStyle.Bold)
+                    Next
                 Next
                 'INSERT LOOSE
                 SQL.AddParam("@id", "%" & SelectedModelID & "M%")
@@ -443,6 +450,12 @@ Public Class frmMain
                             frmAlternatePN.dgvAPN.Rows(frmAlternatePN.dgvAPN.Rows.Count - 1).Cells(j - 1).Style.BackColor = Color.FromArgb(255, 192, 192)
                         Next
                     End If
+
+                    For Each row As DataGridViewRow In frmAlternatePN.dgvAPN.Rows
+                        row.Cells(2).Style.Font = New Font(frmAlternatePN.dgvAPN.Font, FontStyle.Bold)
+                        row.Cells(8).Style.Font = New Font(frmAlternatePN.dgvAPN.Font, FontStyle.Bold)
+                        row.Cells(9).Style.Font = New Font(frmAlternatePN.dgvAPN.Font, FontStyle.Bold)
+                    Next
                 Next
                 'INSERT LOOSE
                 SQL.AddParam("@id", "%" & SelectedModelID & "A%")

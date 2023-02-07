@@ -77,27 +77,30 @@ Partial Class frmMainPN
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(435, 18)
+        Me.Label3.Font = New System.Drawing.Font("Century Gothic", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label3.Location = New System.Drawing.Point(433, 18)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(37, 20)
+        Me.Label3.Size = New System.Drawing.Size(44, 22)
         Me.Label3.TabIndex = 22
         Me.Label3.Text = "Like"
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(196, 18)
+        Me.Label2.Font = New System.Drawing.Font("Century Gothic", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Location = New System.Drawing.Point(185, 18)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(64, 20)
+        Me.Label2.Size = New System.Drawing.Size(79, 22)
         Me.Label2.TabIndex = 20
         Me.Label2.Text = "Search:"
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(204, 58)
+        Me.Label1.Font = New System.Drawing.Font("Century Gothic", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Location = New System.Drawing.Point(196, 58)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(56, 20)
+        Me.Label1.Size = New System.Drawing.Size(68, 22)
         Me.Label1.TabIndex = 19
         Me.Label1.Text = "Buffer:"
         '
@@ -200,6 +203,7 @@ Partial Class frmMainPN
         Me.cbxOption.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbxOption.Font = New System.Drawing.Font("Century Gothic", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cbxOption.FormattingEnabled = True
+        Me.cbxOption.Items.AddRange(New Object() {"Part Number", "Description"})
         Me.cbxOption.Location = New System.Drawing.Point(266, 13)
         Me.cbxOption.Name = "cbxOption"
         Me.cbxOption.Size = New System.Drawing.Size(163, 32)
@@ -210,6 +214,7 @@ Partial Class frmMainPN
         Me.cbxBuffer.BackColor = System.Drawing.Color.FromArgb(CType(CType(218, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.cbxBuffer.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
         Me.cbxBuffer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbxBuffer.Enabled = False
         Me.cbxBuffer.Font = New System.Drawing.Font("Century Gothic", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cbxBuffer.FormattingEnabled = True
         Me.cbxBuffer.Location = New System.Drawing.Point(266, 53)
