@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmMainPN
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class frmMainPN
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMainPN))
         Me.Panel1 = New System.Windows.Forms.Panel()
@@ -35,12 +35,10 @@ Partial Class frmMainPN
         Me.btnALL = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.dgvMPN = New System.Windows.Forms.DataGridView()
-        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.cbxOption = New CG_MES___MTF_Creation_Module.CenteredComboBox()
         Me.cbxBuffer = New CG_MES___MTF_Creation_Module.CenteredComboBox()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvMPN, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -195,17 +193,6 @@ Partial Class frmMainPN
         Me.dgvMPN.Size = New System.Drawing.Size(1074, 657)
         Me.dgvMPN.TabIndex = 1
         '
-        'DataGridView1
-        '
-        Me.DataGridView1.AllowUserToAddRows = False
-        Me.DataGridView1.AllowUserToDeleteRows = False
-        Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Location = New System.Drawing.Point(243, 226)
-        Me.DataGridView1.Name = "DataGridView1"
-        Me.DataGridView1.ReadOnly = True
-        Me.DataGridView1.Size = New System.Drawing.Size(240, 150)
-        Me.DataGridView1.TabIndex = 2
-        '
         'cbxOption
         '
         Me.cbxOption.BackColor = System.Drawing.Color.FromArgb(CType(CType(218, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(255, Byte), Integer))
@@ -235,7 +222,6 @@ Partial Class frmMainPN
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1074, 755)
-        Me.Controls.Add(Me.DataGridView1)
         Me.Controls.Add(Me.dgvMPN)
         Me.Controls.Add(Me.Panel1)
         Me.DoubleBuffered = True
@@ -251,7 +237,6 @@ Partial Class frmMainPN
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         CType(Me.dgvMPN, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -270,5 +255,4 @@ Partial Class frmMainPN
     Friend WithEvents Label1 As Label
     Friend WithEvents cbxBuffer As CenteredComboBox
     Friend WithEvents txtInput As TextBox
-    Friend WithEvents DataGridView1 As DataGridView
 End Class

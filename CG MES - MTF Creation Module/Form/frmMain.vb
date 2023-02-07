@@ -1,5 +1,6 @@
 ﻿Imports Microsoft.VisualBasic.CompilerServices
 Imports System.IO
+Imports Microsoft.Office.Interop
 Imports System.Net
 
 Public Class frmMain
@@ -53,6 +54,8 @@ Public Class frmMain
     End Function
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Cursor.Current = Cursors.WaitCursor
+
         dgvMTF.DoubleBuffered(True)
         frmMainPN.dgvMPN.DoubleBuffered(True)
         frmAlternatePN.dgvAPN.DoubleBuffered(True)
@@ -64,6 +67,7 @@ Public Class frmMain
 
         txtJOB.Focus()
         AssignValidation(txtQTY, ValidationType.Only_Numbers)
+
         Me.Show()
     End Sub
 
@@ -220,6 +224,36 @@ Public Class frmMain
         End With
     End Sub
 
+    Private Sub LoadExcelFile(filePath As String)
+        Dim xlApp As New Excel.Application
+        Dim xlWorkBook As Excel.Workbook = xlApp.Workbooks.Open(filePath)
+        Dim xlWorkSheet As Excel.Worksheet = xlWorkBook.Worksheets("Sheet1")
+        Dim xlRange As Excel.Range = xlWorkSheet.UsedRange
+
+        If xlRange.Cells(1, 1).Text <> "no" Or xlRange.Cells(1, 2).Text <> "pn" Or xlRange.Cells(1, 3).Text <> "per" Then
+            'MsgBox("Wrong Template!", MsgBoxStyle.Critical)
+            frmMainPN.btnImport.Enabled = True
+            Exit Sub
+        End If
+
+        If xlRange.Rows.Count < 2 Then
+            'MessageBox.Show("This file contains no data.", "Import Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            frmMainPN.btnImport.Enabled = True
+            Exit Sub
+        End If
+
+        For Each row In frmMainPN.dgvMPN.Rows
+            Dim PN As String = row.Cells("Part Number").Value
+            For Each xlRow In xlRange.Rows
+                Dim xlPN As String = xlRow.Cells(2).Value
+                If PN = xlPN Then
+                    row.Cells("Quantity Per").Value = xlRow.Cells(3).Value
+                    Exit For
+                End If
+            Next
+        Next
+    End Sub
+
     Private Sub LoadDatatoDGV()
         dgvMTF.Rows.Clear()
 
@@ -269,7 +303,10 @@ Public Class frmMain
         Next
 
         LoadDatatofrmMPN()
+        LoadQuantityPerMPN()
+
         LoadDatatofrmAPN()
+
     End Sub
 
     'Load dgv via ID
@@ -346,6 +383,23 @@ Public Class frmMain
                 btnMPN.Enabled = False
             End If
             ModelLoadFlag = True
+        End If
+    End Sub
+
+    Private Sub LoadQuantityPerMPN()
+        'make it load excel file or usage
+        Dim filePath As String = Application.StartupPath + "\Model Quantity Per\" + cbxModel.Text.Trim + "\Main PN\" + cbxModel.Text.Trim + ".xls"
+        If File.Exists(filePath) Then
+            LoadExcelFile(filePath)
+        Else
+            filePath = filePath.Replace(".xls", ".xlsx")
+            If File.Exists(filePath) Then
+                LoadExcelFile(filePath)
+                frmMainPN.btnImport.Enabled = False
+            Else
+                'MessageBox.Show("Excel file not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                frmMainPN.btnImport.Enabled = True
+            End If
         End If
     End Sub
 
