@@ -1,6 +1,4 @@
-﻿Imports System.IO
-Imports Microsoft.Office.Interop
-Public Class frmMainPN
+﻿Public Class frmMainPN
     Private Sub frmMainPN_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Cursor.Current = Cursors.WaitCursor
         Me.Show()

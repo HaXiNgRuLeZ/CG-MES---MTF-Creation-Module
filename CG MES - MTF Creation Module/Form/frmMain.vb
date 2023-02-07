@@ -1,6 +1,6 @@
 ﻿Imports Microsoft.VisualBasic.CompilerServices
 Imports System.IO
-Imports Microsoft.Office.Interop
+Imports OfficeOpenXml
 Imports System.Net
 
 Public Class frmMain
@@ -225,33 +225,34 @@ Public Class frmMain
     End Sub
 
     Private Sub LoadExcelFile(filePath As String)
-        Dim xlApp As New Excel.Application
-        Dim xlWorkBook As Excel.Workbook = xlApp.Workbooks.Open(filePath)
-        Dim xlWorkSheet As Excel.Worksheet = xlWorkBook.Worksheets("Sheet1")
-        Dim xlRange As Excel.Range = xlWorkSheet.UsedRange
+        Dim excelFile As FileInfo = New FileInfo(filePath)
+        Using package As ExcelPackage = New ExcelPackage(excelFile)
+            ExcelPackage.LicenseContext = LicenseContext.Commercial
+            Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Sheet1")
+            Dim xlRange As ExcelRange = worksheet.Cells
 
-        If xlRange.Cells(1, 1).Text <> "no" Or xlRange.Cells(1, 2).Text <> "pn" Or xlRange.Cells(1, 3).Text <> "per" Then
-            'MsgBox("Wrong Template!", MsgBoxStyle.Critical)
-            frmMainPN.btnImport.Enabled = True
-            Exit Sub
-        End If
+            If xlRange(1, 1).Text <> "no" Or xlRange(1, 2).Text <> "pn" Or xlRange(1, 3).Text <> "per" Then
+                'MessageBox.Show("Wrong template!", "Import Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                frmMainPN.btnImport.Enabled = True
+                Exit Sub
+            End If
+            If worksheet.Dimension.End.Row < 2 Then
+                'MessageBox.Show("This file contains no data.", "Import Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                frmMainPN.btnImport.Enabled = True
+                Exit Sub
+            End If
 
-        If xlRange.Rows.Count < 2 Then
-            'MessageBox.Show("This file contains no data.", "Import Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            frmMainPN.btnImport.Enabled = True
-            Exit Sub
-        End If
-
-        For Each row In frmMainPN.dgvMPN.Rows
-            Dim PN As String = row.Cells("Part Number").Value
-            For Each xlRow In xlRange.Rows
-                Dim xlPN As String = xlRow.Cells(2).Value
-                If PN = xlPN Then
-                    row.Cells("Quantity Per").Value = xlRow.Cells(3).Value
-                    Exit For
-                End If
+            For Each row In frmMainPN.dgvMPN.Rows
+                Dim PN As String = row.Cells("Part Number").Value
+                For i As Integer = 2 To worksheet.Dimension.End.Row
+                    Dim xlPN As String = xlRange(i, 2).Value
+                    If PN = xlPN Then
+                        row.Cells("Quantity Per").Value = xlRange(i, 3).Value
+                        Exit For
+                    End If
+                Next
             Next
-        Next
+        End Using
     End Sub
 
     Private Sub LoadDatatoDGV()
@@ -387,6 +388,7 @@ Public Class frmMain
     End Sub
 
     Private Sub LoadQuantityPerMPN()
+        Cursor.Current = Cursors.WaitCursor
         'make it load excel file or usage
         Dim filePath As String = Application.StartupPath + "\Model Quantity Per\" + cbxModel.Text.Trim + "\Main PN\" + cbxModel.Text.Trim + ".xls"
         If File.Exists(filePath) Then
