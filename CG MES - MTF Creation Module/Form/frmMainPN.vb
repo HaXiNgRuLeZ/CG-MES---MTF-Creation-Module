@@ -42,6 +42,8 @@
                 row.Selected = True
                 dgvMPN.FirstDisplayedScrollingRowIndex = row.Index
                 Exit For
+            Else
+                dgvMPN.ClearSelection()
             End If
         Next
     End Sub

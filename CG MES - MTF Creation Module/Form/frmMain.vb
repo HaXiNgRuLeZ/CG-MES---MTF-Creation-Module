@@ -4,6 +4,10 @@ Imports OfficeOpenXml
 Imports System.Net
 
 Public Class frmMain
+    'Might be useful somehow
+    'txtLQ.SelectionStart = 0
+    'txtLQ.SelectionLength = Len(txtLQ.Text)
+
     Public SQL As New SQLControl
 
     Private ModelLoadFlag As Boolean
@@ -24,7 +28,7 @@ Public Class frmMain
         Cursor.Current = Cursors.WaitCursor
 
         Try
-            Dim webRequest As WebRequest = webRequest.Create(uri)
+            Dim webRequest As WebRequest = WebRequest.Create(uri)
             webRequest.ContentLength = CLng(jsonDataBytes.Length)
             webRequest.ContentType = contentType
             webRequest.Method = method
@@ -129,17 +133,18 @@ Public Class frmMain
         dgv.Columns(3).Name = "Description"
         dgv.Columns(4).Name = "Buffer"
         dgv.Columns(5).Name = "Loose Quantity"
-        dgv.Columns(6).Name = "Quantity Per"
-        dgv.Columns(7).Name = "Total Quantity"
-        dgv.Columns(8).Name = "Total Balance at Store"
+        dgv.Columns(6).Name = "Total Balance at Store"
+        dgv.Columns(7).Name = "Quantity Per"
+        dgv.Columns(8).Name = "Total Quantity"
+
 
         dgv.Columns("No.").ReadOnly = True
         dgv.Columns("Part Number").ReadOnly = True
         dgv.Columns("Description").ReadOnly = True
         dgv.Columns("Loose Quantity").ReadOnly = True
+        dgv.Columns("Total Balance at Store").ReadOnly = True
         dgv.Columns("Quantity Per").ReadOnly = True
         dgv.Columns("Total Quantity").ReadOnly = True
-        dgv.Columns("Total Balance at Store").ReadOnly = True
 
         dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         dgv.AutoResizeColumns()
@@ -150,9 +155,9 @@ Public Class frmMain
         dgv.Columns("Description").Width = 315
         dgv.Columns("Buffer").Width = 50
         dgv.Columns("Loose Quantity").Width = 70
+        dgv.Columns("Total Balance at Store").Width = 80
         dgv.Columns("Quantity Per").Width = 60
         dgv.Columns("Total Quantity").Width = 70
-        dgv.Columns("Total Balance at Store").Width = 80
 
         dgv.RowTemplate.Height = 30
         dgv.AllowUserToResizeRows = False
@@ -185,18 +190,18 @@ Public Class frmMain
         dgv.Columns(4).Name = "Description"
         dgv.Columns(5).Name = "Buffer"
         dgv.Columns(6).Name = "Loose Quantity"
-        dgv.Columns(7).Name = "Quantity Per"
-        dgv.Columns(8).Name = "Total Quantity"
-        dgv.Columns(9).Name = "Total Balance at Store"
+        dgv.Columns(7).Name = "Total Balance at Store"
+        dgv.Columns(8).Name = "Quantity Per"
+        dgv.Columns(9).Name = "Total Quantity"
 
         dgv.Columns("No.").ReadOnly = True
         dgv.Columns("Alternate Part Number").ReadOnly = True
         dgv.Columns("Main Part Number").ReadOnly = True
         dgv.Columns("Description").ReadOnly = True
         dgv.Columns("Loose Quantity").ReadOnly = True
+        dgv.Columns("Total Balance at Store").ReadOnly = True
         dgv.Columns("Quantity Per").ReadOnly = True
         dgv.Columns("Total Quantity").ReadOnly = True
-        dgv.Columns("Total Balance at Store").ReadOnly = True
 
         dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         dgv.AutoResizeColumns()
@@ -208,9 +213,9 @@ Public Class frmMain
         dgv.Columns("Description").Width = 315
         dgv.Columns("Buffer").Width = 50
         dgv.Columns("Loose Quantity").Width = 70
+        dgv.Columns("Total Balance at Store").Width = 80
         dgv.Columns("Quantity Per").Width = 70
         dgv.Columns("Total Quantity").Width = 70
-        dgv.Columns("Total Balance at Store").Width = 80
 
         dgv.RowTemplate.Height = 30
         dgv.AllowUserToResizeRows = False
@@ -227,6 +232,8 @@ Public Class frmMain
 
     Private Sub LoadExcelFile(filePath1 As String, filePath2 As String)
         Dim excelFile1 As FileInfo = New FileInfo(filePath1)
+        Dim excelFile2 As FileInfo = New FileInfo(filePath2)
+
         Using package As ExcelPackage = New ExcelPackage(excelFile1)
             ExcelPackage.LicenseContext = LicenseContext.Commercial
             Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Sheet1")
@@ -245,6 +252,32 @@ Public Class frmMain
 
             For Each row In frmMainPN.dgvMPN.Rows
                 Dim PN As String = row.Cells("Part Number").Value
+                For i As Integer = 2 To worksheet.Dimension.End.Row
+                    Dim xlPN As String = xlRange(i, 2).Value
+                    If PN = xlPN Then
+                        row.Cells("Quantity Per").Value = xlRange(i, 3).Value
+                        Exit For
+                    End If
+                Next
+            Next
+        End Using
+
+        Using package As ExcelPackage = New ExcelPackage(excelFile2)
+            ExcelPackage.LicenseContext = LicenseContext.Commercial
+            Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Sheet1")
+            Dim xlRange As ExcelRange = worksheet.Cells
+            If xlRange(1, 1).Text <> "no" Or xlRange(1, 2).Text <> "pn" Or xlRange(1, 3).Text <> "per" Then
+                'MessageBox.Show("Wrong template!", "Import Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                frmMainPN.btnImport.Enabled = True ' change here
+                Exit Sub
+            End If
+            If worksheet.Dimension.End.Row < 2 Then
+                'MessageBox.Show("This file contains no data.", "Import Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                frmMainPN.btnImport.Enabled = True ' change here
+                Exit Sub
+            End If
+            For Each row In frmAlternatePN.dgvAPN.Rows
+                Dim PN As String = row.Cells("Alternate Part Number").Value
                 For i As Integer = 2 To worksheet.Dimension.End.Row
                     Dim xlPN As String = xlRange(i, 2).Value
                     If PN = xlPN Then
@@ -293,7 +326,7 @@ Public Class frmMain
     Private Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnRefresh.Click
         LoadDatatoDGV()
     End Sub
-    'Load ID via cbxModel
+    'Load ID via cbxModel and Load Data to datagridview
     Private Sub LoadModelID()
         SQL.AddParam("@modelid", cbxModel.Text.Trim)
         SQL.ExecQuery("SELECT id FROM bom WHERE module = @modelid;")
@@ -305,10 +338,9 @@ Public Class frmMain
         Next
 
         LoadDatatofrmMPN()
-        LoadQuantityPerMPN()
-
         LoadDatatofrmAPN()
 
+        LoadQuantityPer()
     End Sub
 
     'Load dgv via ID
@@ -347,7 +379,7 @@ Public Class frmMain
                     End If
 
                     frmMainPN.dgvMPN.Rows.Add(New Object() {1, i.ToString + ".", SQL.DBDT.Rows(i - 1)("pn"),
-                                                            SQL.DBDT.Rows(i - 1)("pn_dsc"), 0, 0, 1, 0, qty})
+                                                            SQL.DBDT.Rows(i - 1)("pn_dsc"), 0, 0, qty, 1, 0})
 
                     If qty = 0 Then
                         For j As Integer = 1 To frmMainPN.dgvMPN.Columns.Count
@@ -394,39 +426,6 @@ Public Class frmMain
         End If
     End Sub
 
-    Private Sub LoadQuantityPerMPN()
-        Cursor.Current = Cursors.WaitCursor
-        'make it load excel file or usage
-        Dim filePath1 As String = Application.StartupPath + "\Model Quantity Per\" + cbxModel.Text.Trim + "\Main PN\" + cbxModel.Text.Trim + ".xls"
-        Dim filePath2 As String = Application.StartupPath + "\Model Quantity Per\" + cbxModel.Text.Trim + "\Alternate PN\" + cbxModel.Text.Trim + ".xls"
-        'For Main PN
-        If File.Exists(filePath1) Then
-            LoadExcelFile(filePath1)
-        Else
-            filePath1 = filePath1.Replace(".xls", ".xlsx")
-            If File.Exists(filePath1) Then
-                LoadExcelFile(filePath1)
-                frmMainPN.btnImport.Enabled = False
-            Else
-                'MessageBox.Show("Excel file not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                frmMainPN.btnImport.Enabled = True
-            End If
-        End If
-        'For Alternate PN
-        If File.Exists(filePath2) Then
-            LoadExcelFile(filePath1)
-        Else
-            filePath1 = filePath1.Replace(".xls", ".xlsx")
-            If File.Exists(filePath1) Then
-                LoadExcelFile(filePath1)
-                frmMainPN.btnImport.Enabled = False
-            Else
-                'MessageBox.Show("Excel file not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                frmMainPN.btnImport.Enabled = True
-            End If
-        End If
-    End Sub
-
     Private Sub LoadDatatofrmAPN()
         If cbxModel.Text = "[SELECT MODEL]" Then
             btnAPN.Text = "---"
@@ -458,7 +457,7 @@ Public Class frmMain
 
                     frmAlternatePN.dgvAPN.Rows.Add(New Object() {0, i.ToString + ".", SQL.DBDT.Rows(i - 1)("pn"),
                                                                 SQL.DBDT.Rows(i - 1)("dsc"), SQL.DBDT.Rows(i - 1)("pn_dsc"),
-                                                                0, 0, 1, 0, qty})
+                                                                0, 0, qty, 1, 0})
 
                     If qty = 0 Then
                         For j As Integer = 1 To frmAlternatePN.dgvAPN.Columns.Count
@@ -505,15 +504,70 @@ Public Class frmMain
         End If
     End Sub
 
+    Private Sub LoadQuantityPer()
+        Cursor.Current = Cursors.WaitCursor
+        Dim flagMPN As Boolean
+        Dim flagAPN As Boolean
+        'make it load excel file or usage
+        Dim filePath1 As String = Application.StartupPath + "\Model Quantity Per\" + cbxModel.Text.Trim + "\Main PN\" + cbxModel.Text.Trim + ".xls"
+        Dim filePath2 As String = Application.StartupPath + "\Model Quantity Per\" + cbxModel.Text.Trim + "\Alternate PN\" + cbxModel.Text.Trim + ".xls"
+        'For Main PN
+        If File.Exists(filePath1) Then
+            flagMPN = True
+        Else
+            filePath1 = filePath1.Replace(".xls", ".xlsx")
+            If File.Exists(filePath1) Then
+                flagMPN = True
+                frmMainPN.btnImport.Enabled = False
+            Else
+                'MessageBox.Show("Excel file not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                flagMPN = False
+                frmMainPN.btnImport.Enabled = True
+            End If
+        End If
+        'For Alternate PN
+        If File.Exists(filePath2) Then
+            flagAPN = True
+        Else
+            filePath2 = filePath2.Replace(".xls", ".xlsx")
+            If File.Exists(filePath2) Then
+                flagAPN = True
+                frmMainPN.btnImport.Enabled = False   'change here
+            Else
+                'MessageBox.Show("Excel file not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                flagAPN = False
+                frmMainPN.btnImport.Enabled = True   'change here
+            End If
+        End If
+
+        If flagMPN = True And flagAPN = True Then
+            LoadExcelFile(filePath1, filePath2)
+        ElseIf flagMPN Then
+            MsgBox("MPN")
+        ElseIf flagAPN Then
+            MsgBox("APN")
+        ElseIf flagMPN = False And flagAPN = False Then
+            frmMainPN.btnImport.Enabled = True
+            frmMainPN.btnImport.Enabled = True 'change here
+        End If
+    End Sub
+
     Private Sub cbxModel_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxModel.SelectedIndexChanged
         LoadModelID()
     End Sub
 
     Private Sub btnMPN_Click(sender As Object, e As EventArgs) Handles btnMPN.Click
+        If txtQTY.Text.Length < 1 Then
+            MessageBox.Show("The Lot Quantity is required.", "Lot Quantity", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            txtQTY.Focus()
+            Exit Sub
+        End If
         If txtQTY.Text <> 0 Then
             If ModelLoadFlag Then
-                'domathhere later
-
+                'Do Math
+                For Each row As DataGridViewRow In frmMainPN.dgvMPN.Rows
+                    row.Cells("Total Quantity").Value = row.Cells("Quantity Per").Value * txtQTY.Text.Trim - row.Cells("Buffer").Value
+                Next
             End If
             frmMainPN.Text = "Product Model: " & cbxModel.Text
             frmMainPN.dgvMPN.Refresh()
@@ -526,10 +580,17 @@ Public Class frmMain
     End Sub
 
     Private Sub btnAPN_Click(sender As Object, e As EventArgs) Handles btnAPN.Click
+        If txtQTY.Text.Length < 1 Then
+            MessageBox.Show("The Lot Quantity is required.", "Lot Quantity", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            txtQTY.Focus()
+            Exit Sub
+        End If
         If txtQTY.Text <> 0 Then
             If ModelLoadFlag Then
-                'domathhere later
-
+                'Do Math
+                For Each row As DataGridViewRow In frmAlternatePN.dgvAPN.Rows
+                    row.Cells("Total Quantity").Value = row.Cells("Quantity Per").Value * txtQTY.Text.Trim - row.Cells("Buffer").Value
+                Next
             End If
             frmAlternatePN.Text = "Product Model (Alternate): " & cbxModel.Text
             frmAlternatePN.dgvAPN.Refresh()
@@ -539,5 +600,27 @@ Public Class frmMain
             MessageBox.Show("The Lot Quantity is required.", "Lot Quantity", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             txtQTY.Focus()
         End If
+    End Sub
+
+    Private Sub HighlightNewMTF()
+        For Each row As DataGridViewRow In dgvMTF.Rows
+            If row.Cells("Job Order Number").Value = txtJOB.Text.Trim Then
+                dgvMTF.ClearSelection()
+                row.Selected = True
+                Exit For
+            End If
+        Next
+    End Sub
+
+    Private Sub ClearInput()
+        txtJOB.Text = ""
+        txtMTF.Text = ""
+        txtQTY.Text = "0"
+        cbxModel.SelectedIndex = 0
+        btnMPN.Enabled = False
+        btnAPN.Enabled = False
+        btnMPN.Text = "---"
+        btnAPN.Text = "---"
+        txtJOB.Focus()
     End Sub
 End Class
