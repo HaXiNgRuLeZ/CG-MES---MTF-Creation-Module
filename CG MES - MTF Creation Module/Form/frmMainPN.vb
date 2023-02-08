@@ -79,6 +79,29 @@
         Next
     End Sub
 
+    'This function is for BUFFER.
+    Private Sub LoadBuffer()
+        'Dim count = dgvPN.Rows.Count
+        'Dim countA = dgvMTF.Rows.Count
+        'Dim num = 1
+        'Dim numA = 1
+        '
+        'While num <= count
+        '    Dim PN As String = dgvPN.Rows(num - 1).Cells("Part Number").Value
+        '
+        '    While numA <= countA
+        '        Dim PNA As String = dgvMTF.Rows(numA - 1).Cells("pn").Value
+        '        If PNA = PN Then
+        '            dgvPN.Rows(num - 1).Cells("Buffer").Value = dgvMTF.Rows(numA - 1).Cells("extra_qty").Value
+        '        End If
+        '
+        '        numA += 1
+        '    End While
+        '    numA = 1
+        '    num += 1
+        'End While
+    End Sub
+
     Private Sub cbxBuffer_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxBuffer.SelectedIndexChanged
         If cbxBuffer.SelectedIndex = 0 Then
             'Return the quantity for buffer = 0
@@ -114,6 +137,8 @@
             '
             'dgvMTF.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             'dgvMTF.AutoResizeColumns()
+
+            LoadBuffer()
         End If
     End Sub
 End Class
