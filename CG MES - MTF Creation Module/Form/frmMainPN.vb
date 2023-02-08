@@ -1,10 +1,41 @@
 ﻿Public Class frmMainPN
+    Public SQL As SQLControl
+    Private Sort As String
     Private Sub frmMainPN_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Cursor.Current = Cursors.WaitCursor
         Me.Show()
         txtInput.Focus()
         dgvMPN.ClearSelection()
         cbxOption.SelectedIndex = 0
+        dgvMPN.FirstDisplayedScrollingRowIndex = 0
+
+        'Load MTF that has buffer
+        LoadcbxMTF()
+    End Sub
+
+    'This function is for BUFFER.
+    Private Sub LoadcbxMTF()
+        cbxBuffer.Items.Clear()
+
+        SQL.AddParam("@modelname", frmMain.cbxModel.Text.Trim)
+        SQL.ExecQuery("select sht, wo from vw_chkout_sht where dsc like '%发料全部完成，自动完结工单%' AND pd_model LIKE @modelname;")
+
+        If SQL.HasException(True) Then Exit Sub
+
+        If SQL.RecordCount > 0 Then
+            cbxBuffer.Items.Add("[SELECT MTF]")
+            For Each r As DataRow In SQL.DBDT.Rows
+                cbxBuffer.Items.Add(r("sht"))
+            Next
+            cbxBuffer.SelectedIndex = 0
+
+            'This features close for now bcause of the latest flowchart
+            'cbxBuffer.Enabled = True
+        Else
+            cbxBuffer.Items.Add("---")
+            cbxBuffer.SelectedIndex = 0
+            cbxBuffer.Enabled = False
+        End If
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -46,5 +77,43 @@
                 dgvMPN.ClearSelection()
             End If
         Next
+    End Sub
+
+    Private Sub cbxBuffer_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxBuffer.SelectedIndexChanged
+        If cbxBuffer.SelectedIndex = 0 Then
+            'Return the quantity for buffer = 0
+            For Each row As DataGridViewRow In dgvMPN.Rows
+                row.Cells("Buffer").Value = "0"
+            Next
+        Else
+            ' look up for MTF number for next query
+            SQL.AddParam("@mtfnumber", cbxBuffer.Text.Trim)
+            SQL.ExecQuery("select sht from vw_wms_chkout_sht where sht = @mtfnumber;")
+
+            If SQL.RecordCount < 1 Then Exit Sub
+
+            For Each r As DataRow In SQL.DBDT.Rows
+                Sort = r("sht")
+            Next
+
+            'Next query or change the buffer quantity after query
+
+            'SQL.AddParam("@mtf", "%" & Sort & "%")
+            'SQL.ExecQuery("SELECT pn, chkout_sht_id, wo_plan_qty, need_qty, act_qty, extra_qty FROM vw_chkout_sum_sync where chkout_sht_id LIKE @mtf;")
+            '
+            'If SQL.HasException(True) Then Exit Sub
+            '
+            'Cursor.Current = Cursors.WaitCursor
+            'dgvMTF.DataSource = SQL.DBDT
+            'dgvMTF.Columns.Cast(Of DataGridViewColumn)().First(Function(c) c.DataPropertyName = "pn").HeaderText = "Part Number"
+            'dgvMTF.Columns.Cast(Of DataGridViewColumn)().First(Function(c) c.DataPropertyName = "chkout_sht_id").HeaderText = "MTF Number"
+            'dgvMTF.Columns.Cast(Of DataGridViewColumn)().First(Function(c) c.DataPropertyName = "wo_plan_qty").HeaderText = "LOT Quantity"
+            'dgvMTF.Columns.Cast(Of DataGridViewColumn)().First(Function(c) c.DataPropertyName = "need_qty").HeaderText = "ACT Qty Request"
+            'dgvMTF.Columns.Cast(Of DataGridViewColumn)().First(Function(c) c.DataPropertyName = "act_qty").HeaderText = "Issued Qty"
+            'dgvMTF.Columns.Cast(Of DataGridViewColumn)().First(Function(c) c.DataPropertyName = "extra_qty").HeaderText = "Incoming Buffer"
+            '
+            'dgvMTF.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+            'dgvMTF.AutoResizeColumns()
+        End If
     End Sub
 End Class

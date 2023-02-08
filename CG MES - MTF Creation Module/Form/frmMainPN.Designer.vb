@@ -26,8 +26,10 @@ Partial Class frmMainPN
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.txtInput = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.cbxOption = New CG_MES___MTF_Creation_Module.CenteredComboBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.cbxBuffer = New CG_MES___MTF_Creation_Module.CenteredComboBox()
         Me.btnImport = New System.Windows.Forms.Button()
         Me.btnSubmit = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
@@ -35,8 +37,6 @@ Partial Class frmMainPN
         Me.btnALL = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.dgvMPN = New System.Windows.Forms.DataGridView()
-        Me.cbxOption = New CG_MES___MTF_Creation_Module.CenteredComboBox()
-        Me.cbxBuffer = New CG_MES___MTF_Creation_Module.CenteredComboBox()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvMPN, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -84,6 +84,19 @@ Partial Class frmMainPN
         Me.Label3.TabIndex = 22
         Me.Label3.Text = "Like"
         '
+        'cbxOption
+        '
+        Me.cbxOption.BackColor = System.Drawing.Color.FromArgb(CType(CType(218, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cbxOption.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.cbxOption.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbxOption.Font = New System.Drawing.Font("Century Gothic", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cbxOption.FormattingEnabled = True
+        Me.cbxOption.Items.AddRange(New Object() {"Part Number", "Description"})
+        Me.cbxOption.Location = New System.Drawing.Point(266, 13)
+        Me.cbxOption.Name = "cbxOption"
+        Me.cbxOption.Size = New System.Drawing.Size(163, 32)
+        Me.cbxOption.TabIndex = 21
+        '
         'Label2
         '
         Me.Label2.AutoSize = True
@@ -103,6 +116,19 @@ Partial Class frmMainPN
         Me.Label1.Size = New System.Drawing.Size(68, 22)
         Me.Label1.TabIndex = 19
         Me.Label1.Text = "Buffer:"
+        '
+        'cbxBuffer
+        '
+        Me.cbxBuffer.BackColor = System.Drawing.Color.FromArgb(CType(CType(218, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cbxBuffer.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.cbxBuffer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbxBuffer.Enabled = False
+        Me.cbxBuffer.Font = New System.Drawing.Font("Century Gothic", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cbxBuffer.FormattingEnabled = True
+        Me.cbxBuffer.Location = New System.Drawing.Point(266, 53)
+        Me.cbxBuffer.Name = "cbxBuffer"
+        Me.cbxBuffer.Size = New System.Drawing.Size(228, 32)
+        Me.cbxBuffer.TabIndex = 18
         '
         'btnImport
         '
@@ -195,32 +221,6 @@ Partial Class frmMainPN
         Me.dgvMPN.Name = "dgvMPN"
         Me.dgvMPN.Size = New System.Drawing.Size(1074, 657)
         Me.dgvMPN.TabIndex = 1
-        '
-        'cbxOption
-        '
-        Me.cbxOption.BackColor = System.Drawing.Color.FromArgb(CType(CType(218, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.cbxOption.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
-        Me.cbxOption.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbxOption.Font = New System.Drawing.Font("Century Gothic", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cbxOption.FormattingEnabled = True
-        Me.cbxOption.Items.AddRange(New Object() {"Part Number", "Description"})
-        Me.cbxOption.Location = New System.Drawing.Point(266, 13)
-        Me.cbxOption.Name = "cbxOption"
-        Me.cbxOption.Size = New System.Drawing.Size(163, 32)
-        Me.cbxOption.TabIndex = 21
-        '
-        'cbxBuffer
-        '
-        Me.cbxBuffer.BackColor = System.Drawing.Color.FromArgb(CType(CType(218, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.cbxBuffer.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
-        Me.cbxBuffer.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbxBuffer.Enabled = False
-        Me.cbxBuffer.Font = New System.Drawing.Font("Century Gothic", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cbxBuffer.FormattingEnabled = True
-        Me.cbxBuffer.Location = New System.Drawing.Point(266, 53)
-        Me.cbxBuffer.Name = "cbxBuffer"
-        Me.cbxBuffer.Size = New System.Drawing.Size(228, 32)
-        Me.cbxBuffer.TabIndex = 18
         '
         'frmMainPN
         '
