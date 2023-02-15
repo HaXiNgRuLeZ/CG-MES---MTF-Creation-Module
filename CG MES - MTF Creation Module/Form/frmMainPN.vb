@@ -2,8 +2,8 @@
     Public SQL As New SQLControl
     Private Sort As String
     Private Sub frmMainPN_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Cursor.Current = Cursors.WaitCursor
         Me.Show()
+        Cursor.Current = Cursors.WaitCursor
         txtInput.Focus()
         dgvMPN.ClearSelection()
         cbxOption.SelectedIndex = 0

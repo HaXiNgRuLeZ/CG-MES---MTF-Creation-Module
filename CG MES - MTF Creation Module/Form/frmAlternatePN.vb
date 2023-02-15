@@ -1,7 +1,7 @@
 ﻿Public Class frmAlternatePN
     Private Sub frmAlternatePN_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Cursor.Current = Cursors.WaitCursor
         Me.Show()
+        Cursor.Current = Cursors.WaitCursor
         txtInput.Focus()
         dgvAPN.ClearSelection()
         cbxOption.SelectedIndex = 0
