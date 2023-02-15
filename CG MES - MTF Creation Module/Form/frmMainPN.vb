@@ -1,5 +1,5 @@
 ﻿Public Class frmMainPN
-    Public SQL As SQLControl
+    Public SQL As New SQLControl
     Private Sort As String
     Private Sub frmMainPN_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Cursor.Current = Cursors.WaitCursor
@@ -9,33 +9,7 @@
         cbxOption.SelectedIndex = 0
         dgvMPN.FirstDisplayedScrollingRowIndex = 0
 
-        'Load MTF that has buffer
-        LoadcbxMTF()
-    End Sub
-
-    'This function is for BUFFER.
-    Private Sub LoadcbxMTF()
-        cbxBuffer.Items.Clear()
-
-        SQL.AddParam("@modelname", frmMain.cbxModel.Text.Trim)
-        SQL.ExecQuery("select sht, wo from vw_chkout_sht where dsc like '%发料全部完成，自动完结工单%' AND pd_model LIKE @modelname;")
-
-        If SQL.HasException(True) Then Exit Sub
-
-        If SQL.RecordCount > 0 Then
-            cbxBuffer.Items.Add("[SELECT MTF]")
-            For Each r As DataRow In SQL.DBDT.Rows
-                cbxBuffer.Items.Add(r("sht"))
-            Next
-            cbxBuffer.SelectedIndex = 0
-
-            'This features close for now bcause of the latest flowchart
-            'cbxBuffer.Enabled = True
-        Else
-            cbxBuffer.Items.Add("---")
-            cbxBuffer.SelectedIndex = 0
-            cbxBuffer.Enabled = False
-        End If
+        'MBY ADD BUFFER OPTION
     End Sub
 
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -79,66 +53,51 @@
         Next
     End Sub
 
-    'This function is for BUFFER.
-    Private Sub LoadBuffer()
-        'Dim count = dgvPN.Rows.Count
-        'Dim countA = dgvMTF.Rows.Count
-        'Dim num = 1
-        'Dim numA = 1
-        '
-        'While num <= count
-        '    Dim PN As String = dgvPN.Rows(num - 1).Cells("Part Number").Value
-        '
-        '    While numA <= countA
-        '        Dim PNA As String = dgvMTF.Rows(numA - 1).Cells("pn").Value
-        '        If PNA = PN Then
-        '            dgvPN.Rows(num - 1).Cells("Buffer").Value = dgvMTF.Rows(numA - 1).Cells("extra_qty").Value
-        '        End If
-        '
-        '        numA += 1
-        '    End While
-        '    numA = 1
-        '    num += 1
-        'End While
+    Private Sub dgvMPN_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles dgvMPN.CellValidating
+        If e.ColumnIndex = 4 Then
+            If dgvMPN.IsCurrentCellDirty Then
+                If Not IsNumeric(e.FormattedValue) Then
+                    e.Cancel = True
+                    MessageBox.Show("Insert Numeric Only...", "Error!")
+
+                    'for select the text in cell
+                    dgvMPN.CurrentCell = dgvMPN(e.ColumnIndex, e.RowIndex)
+                    dgvMPN.BeginEdit(True)
+                    Dim textBox As TextBox = DirectCast(dgvMPN.EditingControl, TextBox)
+                    textBox.SelectionStart = 0
+                    textBox.SelectionLength = textBox.Text.Length
+                End If
+            End If
+        End If
     End Sub
 
-    Private Sub cbxBuffer_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxBuffer.SelectedIndexChanged
-        If cbxBuffer.SelectedIndex = 0 Then
-            'Return the quantity for buffer = 0
-            For Each row As DataGridViewRow In dgvMPN.Rows
-                row.Cells("Buffer").Value = "0"
-            Next
+    Private Sub btnSubmit_Click(sender As Object, e As EventArgs) Handles btnSubmit.Click
+        Dim count As Integer
+        For Each row As DataGridViewRow In dgvMPN.Rows
+            If row.Cells("CheckBox").Value = CheckState.Unchecked = False Then
+                count += 1
+            End If
+        Next
+
+        If count > 0 Then
+            frmMain.btnMPN.Text = count.ToString + " / " + dgvMPN.Rows.Count.ToString + " Parts Selected"
+            frmMain.Show()
+            Me.Close()
         Else
-            ' look up for MTF number for next query
-            SQL.AddParam("@mtfnumber", cbxBuffer.Text.Trim)
-            SQL.ExecQuery("select sht from vw_wms_chkout_sht where sht = @mtfnumber;")
-
-            If SQL.RecordCount < 1 Then Exit Sub
-
-            For Each r As DataRow In SQL.DBDT.Rows
-                Sort = r("sht")
-            Next
-
-            'Next query or change the buffer quantity after query
-
-            'SQL.AddParam("@mtf", "%" & Sort & "%")
-            'SQL.ExecQuery("SELECT pn, chkout_sht_id, wo_plan_qty, need_qty, act_qty, extra_qty FROM vw_chkout_sum_sync where chkout_sht_id LIKE @mtf;")
-            '
-            'If SQL.HasException(True) Then Exit Sub
-            '
-            'Cursor.Current = Cursors.WaitCursor
-            'dgvMTF.DataSource = SQL.DBDT
-            'dgvMTF.Columns.Cast(Of DataGridViewColumn)().First(Function(c) c.DataPropertyName = "pn").HeaderText = "Part Number"
-            'dgvMTF.Columns.Cast(Of DataGridViewColumn)().First(Function(c) c.DataPropertyName = "chkout_sht_id").HeaderText = "MTF Number"
-            'dgvMTF.Columns.Cast(Of DataGridViewColumn)().First(Function(c) c.DataPropertyName = "wo_plan_qty").HeaderText = "LOT Quantity"
-            'dgvMTF.Columns.Cast(Of DataGridViewColumn)().First(Function(c) c.DataPropertyName = "need_qty").HeaderText = "ACT Qty Request"
-            'dgvMTF.Columns.Cast(Of DataGridViewColumn)().First(Function(c) c.DataPropertyName = "act_qty").HeaderText = "Issued Qty"
-            'dgvMTF.Columns.Cast(Of DataGridViewColumn)().First(Function(c) c.DataPropertyName = "extra_qty").HeaderText = "Incoming Buffer"
-            '
-            'dgvMTF.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            'dgvMTF.AutoResizeColumns()
-
-            LoadBuffer()
+            MessageBox.Show("At least one Part Number is required to be selected.", "Part Selection", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            dgvMPN.Focus()
         End If
+    End Sub
+
+    Private Sub dgvMPN_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvMPN.CellEndEdit
+        For Each row As DataGridViewRow In dgvMPN.Rows
+            row.Cells("Total Quantity").Value = row.Cells("Quantity Per").Value * frmMain.txtQTY.Text.Trim - row.Cells("Buffer").Value
+
+            If row.Cells("Total Quantity").Value < 1 Then
+                MessageBox.Show("The Total Qty cannot be zero or negative value for P/N '" + row.Cells("Part Number").Value + "'.", "Invalid Total Qty", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                row.Cells("Buffer").Value = "0"
+                row.Cells("Total Quantity").Value = row.Cells("Quantity Per").Value * frmMain.txtQTY.Text.Trim - row.Cells("Buffer").Value
+            End If
+        Next
     End Sub
 End Class

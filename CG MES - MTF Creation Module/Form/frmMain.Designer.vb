@@ -29,6 +29,7 @@ Partial Class frmMain
         Me.btnMPN = New System.Windows.Forms.Button()
         Me.txtQTY = New System.Windows.Forms.TextBox()
         Me.txtMTF = New System.Windows.Forms.TextBox()
+        Me.btnSubmit = New System.Windows.Forms.Button()
         Me.txtJOB = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
@@ -36,15 +37,18 @@ Partial Class frmMain
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.btnRefresh = New System.Windows.Forms.Button()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.dgvMTF = New System.Windows.Forms.DataGridView()
-        Me.btnSubmit = New System.Windows.Forms.Button()
-        Me.btnRefresh = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.PanelBarTop = New System.Windows.Forms.Panel()
         Me.btnExit = New System.Windows.Forms.PictureBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.btnMinimize = New System.Windows.Forms.PictureBox()
+        Me.txtJsonPN = New System.Windows.Forms.TextBox()
+        Me.txtResult = New System.Windows.Forms.TextBox()
+        Me.txtJsonHeader = New System.Windows.Forms.TextBox()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.cbxModel = New CG_MES___MTF_Creation_Module.CenteredComboBox()
         Me.Panel2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -122,7 +126,7 @@ Partial Class frmMain
         Me.txtQTY.Name = "txtQTY"
         Me.txtQTY.Size = New System.Drawing.Size(129, 26)
         Me.txtQTY.TabIndex = 3
-        Me.txtQTY.Text = "1"
+        Me.txtQTY.Text = "0"
         '
         'txtMTF
         '
@@ -133,6 +137,20 @@ Partial Class frmMain
         Me.txtMTF.Name = "txtMTF"
         Me.txtMTF.Size = New System.Drawing.Size(284, 26)
         Me.txtMTF.TabIndex = 2
+        '
+        'btnSubmit
+        '
+        Me.btnSubmit.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnSubmit.Image = Global.CG_MES___MTF_Creation_Module.My.Resources.Resources.apply
+        Me.btnSubmit.Location = New System.Drawing.Point(997, 37)
+        Me.btnSubmit.Name = "btnSubmit"
+        Me.btnSubmit.Size = New System.Drawing.Size(238, 85)
+        Me.btnSubmit.TabIndex = 7
+        Me.btnSubmit.Text = "Create New MTF"
+        Me.btnSubmit.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnSubmit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnSubmit.UseVisualStyleBackColor = True
         '
         'txtJOB
         '
@@ -198,6 +216,20 @@ Partial Class frmMain
         Me.Label2.TabIndex = 11
         Me.Label2.Text = "Job Order Number:"
         '
+        'btnRefresh
+        '
+        Me.btnRefresh.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnRefresh.Image = Global.CG_MES___MTF_Creation_Module.My.Resources.Resources.refresh
+        Me.btnRefresh.Location = New System.Drawing.Point(6, 148)
+        Me.btnRefresh.Name = "btnRefresh"
+        Me.btnRefresh.Size = New System.Drawing.Size(1248, 31)
+        Me.btnRefresh.TabIndex = 8
+        Me.btnRefresh.Text = "Refresh"
+        Me.btnRefresh.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnRefresh.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnRefresh.UseVisualStyleBackColor = True
+        '
         'Panel3
         '
         Me.Panel3.BackColor = System.Drawing.Color.Maroon
@@ -219,34 +251,6 @@ Partial Class frmMain
         Me.dgvMTF.ReadOnly = True
         Me.dgvMTF.Size = New System.Drawing.Size(1284, 731)
         Me.dgvMTF.TabIndex = 9
-        '
-        'btnSubmit
-        '
-        Me.btnSubmit.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSubmit.Image = Global.CG_MES___MTF_Creation_Module.My.Resources.Resources.apply
-        Me.btnSubmit.Location = New System.Drawing.Point(997, 37)
-        Me.btnSubmit.Name = "btnSubmit"
-        Me.btnSubmit.Size = New System.Drawing.Size(238, 85)
-        Me.btnSubmit.TabIndex = 7
-        Me.btnSubmit.Text = "Create New MTF"
-        Me.btnSubmit.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnSubmit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnSubmit.UseVisualStyleBackColor = True
-        '
-        'btnRefresh
-        '
-        Me.btnRefresh.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnRefresh.Image = Global.CG_MES___MTF_Creation_Module.My.Resources.Resources.refresh
-        Me.btnRefresh.Location = New System.Drawing.Point(6, 148)
-        Me.btnRefresh.Name = "btnRefresh"
-        Me.btnRefresh.Size = New System.Drawing.Size(1248, 31)
-        Me.btnRefresh.TabIndex = 8
-        Me.btnRefresh.Text = "Refresh"
-        Me.btnRefresh.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnRefresh.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnRefresh.UseVisualStyleBackColor = True
         '
         'Panel1
         '
@@ -307,6 +311,45 @@ Partial Class frmMain
         Me.btnMinimize.TabIndex = 9
         Me.btnMinimize.TabStop = False
         '
+        'txtJsonPN
+        '
+        Me.txtJsonPN.Location = New System.Drawing.Point(788, 580)
+        Me.txtJsonPN.Multiline = True
+        Me.txtJsonPN.Name = "txtJsonPN"
+        Me.txtJsonPN.Size = New System.Drawing.Size(484, 119)
+        Me.txtJsonPN.TabIndex = 12
+        Me.txtJsonPN.Text = "{""pn"":""[PART-NUM]"",""qty"":""[PART-QTY]"",""dsc"":"""",""out_wh"":"""",""group_id"":"""",""priorit" &
+    "y"":""0"",""item"":""[ITEM-NUM]""}"
+        Me.txtJsonPN.Visible = False
+        '
+        'txtResult
+        '
+        Me.txtResult.Location = New System.Drawing.Point(788, 705)
+        Me.txtResult.Multiline = True
+        Me.txtResult.Name = "txtResult"
+        Me.txtResult.Size = New System.Drawing.Size(484, 265)
+        Me.txtResult.TabIndex = 11
+        Me.txtResult.Visible = False
+        '
+        'txtJsonHeader
+        '
+        Me.txtJsonHeader.Location = New System.Drawing.Point(226, 705)
+        Me.txtJsonHeader.Multiline = True
+        Me.txtJsonHeader.Name = "txtJsonHeader"
+        Me.txtJsonHeader.Size = New System.Drawing.Size(484, 265)
+        Me.txtJsonHeader.TabIndex = 10
+        Me.txtJsonHeader.Text = resources.GetString("txtJsonHeader.Text")
+        Me.txtJsonHeader.Visible = False
+        '
+        'TextBox1
+        '
+        Me.TextBox1.Location = New System.Drawing.Point(226, 580)
+        Me.TextBox1.Multiline = True
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.Size = New System.Drawing.Size(484, 119)
+        Me.TextBox1.TabIndex = 13
+        Me.TextBox1.Visible = False
+        '
         'cbxModel
         '
         Me.cbxModel.BackColor = System.Drawing.Color.FromArgb(CType(CType(218, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(255, Byte), Integer))
@@ -323,6 +366,10 @@ Partial Class frmMain
         Me.AutoScaleDimensions = New System.Drawing.SizeF(9.0!, 20.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1284, 1005)
+        Me.Controls.Add(Me.TextBox1)
+        Me.Controls.Add(Me.txtJsonPN)
+        Me.Controls.Add(Me.txtResult)
+        Me.Controls.Add(Me.txtJsonHeader)
         Me.Controls.Add(Me.dgvMTF)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
@@ -346,6 +393,7 @@ Partial Class frmMain
         CType(Me.btnExit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.btnMinimize, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -372,4 +420,8 @@ Partial Class frmMain
     Friend WithEvents btnAPN As Button
     Friend WithEvents btnMPN As Button
     Friend WithEvents cbxModel As CenteredComboBox
+    Friend WithEvents txtJsonPN As TextBox
+    Friend WithEvents txtResult As TextBox
+    Friend WithEvents txtJsonHeader As TextBox
+    Friend WithEvents TextBox1 As TextBox
 End Class

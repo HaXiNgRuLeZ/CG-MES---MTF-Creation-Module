@@ -2,6 +2,8 @@
 Imports System.IO
 Imports OfficeOpenXml
 Imports System.Net
+Imports System.Text
+
 
 Public Class frmMain
     'Might be useful somehow
@@ -23,35 +25,20 @@ Public Class frmMain
         Me.MaximizedBounds = Screen.PrimaryScreen.WorkingArea
     End Sub
 
-    Private Function SendRequest(ByVal uri As Uri, ByVal jsonDataBytes As Byte(), ByVal contentType As String, ByVal method As String) As String
+    'Private Function SendRequest(ByVal uri As Uri, ByVal jsonDataBytes As Byte(), ByVal contentType As String, ByVal method As String) As String
+    Public Function SendRequest(ByVal uri As Uri, ByVal jsonData As String, ByVal contentType As String, ByVal method As String) As String
         Dim str As String = ""
         Cursor.Current = Cursors.WaitCursor
 
         Try
-            Dim webRequest As WebRequest = WebRequest.Create(uri)
-            webRequest.ContentLength = CLng(jsonDataBytes.Length)
-            webRequest.ContentType = contentType
-            webRequest.Method = method
-
-            Using requestStream As Stream = webRequest.GetRequestStream()
-                requestStream.Write(jsonDataBytes, 0, jsonDataBytes.Length)
-                requestStream.Close()
-
-                Using responseStream As Stream = webRequest.GetResponse().GetResponseStream()
-
-                    Using streamReader As StreamReader = New StreamReader(responseStream)
-                        str = streamReader.ReadToEnd()
-                    End Using
-                End Using
-            End Using
-
-            Cursor.Current = Cursors.Arrow
+            Dim webClient As New WebClient()
+            webClient.Headers.Add(HttpRequestHeader.ContentType, contentType)
+            Dim response As String = webClient.UploadString(uri, method, jsonData)
+            str = response
         Catch ex As Exception
-            ProjectData.SetProjectError(ex)
-            Dim exception As Exception = ex
-            Cursor.Current = Cursors.Arrow
-            Dim num As Integer = CInt(MessageBox.Show("Error: " & exception.ToString()))
-            ProjectData.ClearProjectError()
+            MessageBox.Show("Error: " & ex.ToString())
+        Finally
+            Cursor.Current = Cursors.Default
         End Try
 
         Return str
@@ -268,12 +255,12 @@ Public Class frmMain
             Dim xlRange As ExcelRange = worksheet.Cells
             If xlRange(1, 1).Text <> "no" Or xlRange(1, 2).Text <> "pn" Or xlRange(1, 3).Text <> "per" Then
                 'MessageBox.Show("Wrong template!", "Import Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                frmMainPN.btnImport.Enabled = True ' change here
+                frmAlternatePN.btnImport.Enabled = True ' change here
                 Exit Sub
             End If
             If worksheet.Dimension.End.Row < 2 Then
                 'MessageBox.Show("This file contains no data.", "Import Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                frmMainPN.btnImport.Enabled = True ' change here
+                frmAlternatePN.btnImport.Enabled = True ' change here
                 Exit Sub
             End If
             For Each row In frmAlternatePN.dgvAPN.Rows
@@ -622,5 +609,100 @@ Public Class frmMain
         btnMPN.Text = "---"
         btnAPN.Text = "---"
         txtJOB.Focus()
+    End Sub
+
+    Private Sub btnSubmit_Click(sender As Object, e As EventArgs) Handles btnSubmit.Click
+        If String.IsNullOrWhiteSpace(txtJOB.Text.Trim) Then
+            MessageBox.Show("The Job Order Number information is required.", "Job Order Number", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            txtJOB.Focus()
+        ElseIf String.IsNullOrWhiteSpace(txtMTF.Text.Trim) Then
+            MessageBox.Show("The MTF information is required.", "MTF Information", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            txtMTF.Focus()
+        ElseIf txtQTY.Text.Trim = 0 Then
+            MessageBox.Show("The Lot Quantity information is required.", "Lot Quantity", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            txtQTY.Focus()
+        ElseIf cbxModel.SelectedIndex = 0 Then
+            MessageBox.Show("The Product Model selection is required.", "Product Model", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            cbxModel.DroppedDown = True
+        ElseIf btnMPN.Enabled = False Then
+            MessageBox.Show("No parts selection are required to create to job order.", "Parts Selection", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            cbxModel.DroppedDown = True
+        Else
+            If ModelLoadFlag Then
+                'Do Math
+                For Each row As DataGridViewRow In frmMainPN.dgvMPN.Rows
+                    row.Cells("Total Quantity").Value = row.Cells("Quantity Per").Value * txtQTY.Text.Trim - row.Cells("Buffer").Value
+                Next
+                For Each row As DataGridViewRow In frmAlternatePN.dgvAPN.Rows
+                    row.Cells("Total Quantity").Value = row.Cells("Quantity Per").Value * txtQTY.Text.Trim - row.Cells("Buffer").Value
+                Next
+                ModelLoadFlag = False
+            End If
+
+            If MessageBox.Show("Confirm to create a new J/O with the below information ?" & vbCrLf & vbCrLf & "J/O # : " & txtJOB.Text.Trim() & vbCrLf & "Model : " + cbxModel.Text & vbCrLf & "Main Parts : " + btnMPN.Text & vbCrLf & "Alternate Parts : " + btnAPN.Text & vbCrLf & "MTF # : " + txtMTF.Text.Trim() & vbCrLf & "Lot Qty : " + txtQTY.Text, "Confirm MTF Creation", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                Try
+                    Cursor.Current = Cursors.WaitCursor
+                    txtResult.Text = "POSTing..."
+                    Dim guid As Guid = Guid.NewGuid()
+
+                    Dim str1 As String = txtJsonHeader.Text.Trim()
+                    str1 = str1.Replace("[SESSION-ID]", guid.ToString("N"))
+                    str1 = str1.Replace("[WO-NUM]", txtJOB.Text.Trim())
+                    str1 = str1.Replace("[MTF-NUM]", txtMTF.Text.Trim())
+                    str1 = str1.Replace("[MODEL]", cbxModel.Text.Trim())
+                    str1 = str1.Replace("[PLAN-DATE]", DateTime.Today.ToString("yyyy-MM-dd"))
+                    str1 = str1.Replace("[TIME-STAMP]", DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.676Z"))
+                    str1 = str1.Replace("[PLAN-QTY]", txtQTY.Text.Trim())
+
+                    Dim str2 As String = ""
+
+                    For Each row As DataGridViewRow In frmMainPN.dgvMPN.Rows
+                        If row.Cells("CheckBox").Value = CheckState.Unchecked = False Then
+                            Dim str3 As String = txtJsonPN.Text.Trim()
+                            str3 = str3.Replace("[PART-NUM]", row.Cells("Part Number").Value.ToString())
+                            str3 = str3.Replace("[PART-QTY]", row.Cells("Total Quantity").Value.ToString())
+                            str3 = str3.Replace("[ITEM-NUM]", row.Index + 1)
+
+                            str2 += str3
+
+                            If row.Index <> frmMainPN.dgvMPN.Rows.Count - 1 Then
+                                str2 += ","
+                            End If
+                        End If
+                    Next
+                    For Each row As DataGridViewRow In frmAlternatePN.dgvAPN.Rows
+                        If row.Cells("CheckBox").Value = CheckState.Unchecked = False Then
+                            Dim str5 As String = txtJsonPN.Text.Trim()
+                            str5 = str5.Replace("[PART-NUM]", row.Cells("Alternate Part Number").Value.ToString())
+                            str5 = str5.Replace("[PART-QTY]", row.Cells("Total Quantity").Value.ToString())
+                            str5 = str5.Replace("[ITEM-NUM]", row.Index + 1)
+
+                            str2 += str5
+                            If row.Index <> frmAlternatePN.dgvAPN.Rows.Count - 1 Then
+                                str2 += ","
+                            End If
+                        End If
+                    Next
+
+                    TextBox1.Text = str2
+
+                    Dim str4 As String = str2 & "]}"
+                    txtResult.Text = Me.SendRequest(New Uri("http://192.168.1.99:5080/api/ErpDataSync"), str1 + str4, "application/json", "POST")
+                    If txtResult.Text.Contains("""message"":""OK""") Then
+                        LoadDatatoDGV()
+                        HighlightNewMTF()
+                        MessageBox.Show("A new MTF has been successfully created!", "MTF Created", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        ClearInput()
+                    End If
+                Catch ex As Exception
+                    Cursor.Current = Cursors.Arrow
+                    MessageBox.Show("Error: " & ex.ToString(), "MTF Creation Error", MessageBoxButtons.OK, MessageBoxIcon.Hand)
+                Finally
+                    Cursor.Current = Cursors.Arrow
+                End Try
+            End If
+
+            ModelLoadFlag = False
+        End If
     End Sub
 End Class
