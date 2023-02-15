@@ -100,4 +100,21 @@
             End If
         Next
     End Sub
+
+    Private Sub dgvMPN_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvMPN.KeyDown
+        If e.KeyCode = Keys.Space Then
+            ' Get the current row
+            Dim currentRow As DataGridViewRow = dgvMPN.CurrentRow
+
+            ' Get the value of the checkbox cell in the first column
+            Dim checkboxCell As DataGridViewCheckBoxCell = currentRow.Cells(0)
+            Dim isChecked As Boolean = CBool(checkboxCell.Value)
+
+            ' Toggle the value of the checkbox cell
+            checkboxCell.Value = Not isChecked
+
+            ' Prevent the space key from being entered in the cell
+            e.Handled = True
+        End If
+    End Sub
 End Class
