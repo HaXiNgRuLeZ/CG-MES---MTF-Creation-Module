@@ -27,14 +27,9 @@
             End If
         Next
 
-        If count > 0 Then
-            frmMain.btnAPN.Text = count.ToString + " / " + dgvAPN.Rows.Count.ToString + " Parts Selected"
-            frmMain.Show()
-            Me.Close()
-        Else
-            MessageBox.Show("At least one Part Number is required to be selected.", "Part Selection", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            dgvAPN.Focus()
-        End If
+        frmMain.btnAPN.Text = count.ToString + " / " + dgvAPN.Rows.Count.ToString + " Parts Selected"
+        frmMain.Show()
+        Me.Close()
     End Sub
 
     Private Sub btnALL_Click(sender As Object, e As EventArgs) Handles btnALL.Click

@@ -68,17 +68,17 @@ Partial Class frmMainPN
         Me.txtInput.BackColor = System.Drawing.Color.FromArgb(CType(CType(218, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.txtInput.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
         Me.txtInput.Font = New System.Drawing.Font("Century Gothic", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtInput.Location = New System.Drawing.Point(478, 13)
+        Me.txtInput.Location = New System.Drawing.Point(477, 13)
         Me.txtInput.MaxLength = 11
         Me.txtInput.Name = "txtInput"
-        Me.txtInput.Size = New System.Drawing.Size(218, 31)
+        Me.txtInput.Size = New System.Drawing.Size(234, 31)
         Me.txtInput.TabIndex = 23
         '
         'Label3
         '
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Century Gothic", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(433, 18)
+        Me.Label3.Location = New System.Drawing.Point(431, 18)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(44, 22)
         Me.Label3.TabIndex = 22
@@ -138,7 +138,7 @@ Partial Class frmMainPN
         Me.btnImport.Image = Global.CG_MES___MTF_Creation_Module.My.Resources.Resources.import
         Me.btnImport.Location = New System.Drawing.Point(500, 51)
         Me.btnImport.Name = "btnImport"
-        Me.btnImport.Size = New System.Drawing.Size(196, 35)
+        Me.btnImport.Size = New System.Drawing.Size(211, 35)
         Me.btnImport.TabIndex = 13
         Me.btnImport.Text = "Import Qty Per"
         Me.btnImport.TextAlign = System.Drawing.ContentAlignment.MiddleRight
