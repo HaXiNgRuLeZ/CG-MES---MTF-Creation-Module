@@ -25,6 +25,7 @@ Partial Class frmMain
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.cbxModel = New CG_MES___MTF_Creation_Module.CenteredComboBox()
         Me.btnAPN = New System.Windows.Forms.Button()
         Me.btnMPN = New System.Windows.Forms.Button()
         Me.txtQTY = New System.Windows.Forms.TextBox()
@@ -49,7 +50,6 @@ Partial Class frmMain
         Me.txtResult = New System.Windows.Forms.TextBox()
         Me.txtJsonHeader = New System.Windows.Forms.TextBox()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.cbxModel = New CG_MES___MTF_Creation_Module.CenteredComboBox()
         Me.Panel2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         CType(Me.dgvMTF, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -95,6 +95,17 @@ Partial Class frmMain
         Me.GroupBox1.TabIndex = 1
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "MTF - Create New Material Requisition"
+        '
+        'cbxModel
+        '
+        Me.cbxModel.BackColor = System.Drawing.Color.FromArgb(CType(CType(218, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.cbxModel.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.cbxModel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cbxModel.FormattingEnabled = True
+        Me.cbxModel.Location = New System.Drawing.Point(661, 27)
+        Me.cbxModel.Name = "cbxModel"
+        Me.cbxModel.Size = New System.Drawing.Size(316, 27)
+        Me.cbxModel.TabIndex = 17
         '
         'btnAPN
         '
@@ -320,7 +331,6 @@ Partial Class frmMain
         Me.txtJsonPN.TabIndex = 12
         Me.txtJsonPN.Text = "{""pn"":""[PART-NUM]"",""qty"":""[PART-QTY]"",""dsc"":"""",""out_wh"":"""",""group_id"":"""",""priorit" &
     "y"":""0"",""item"":""[ITEM-NUM]""}"
-        Me.txtJsonPN.Visible = False
         '
         'txtResult
         '
@@ -329,7 +339,6 @@ Partial Class frmMain
         Me.txtResult.Name = "txtResult"
         Me.txtResult.Size = New System.Drawing.Size(484, 265)
         Me.txtResult.TabIndex = 11
-        Me.txtResult.Visible = False
         '
         'txtJsonHeader
         '
@@ -339,7 +348,6 @@ Partial Class frmMain
         Me.txtJsonHeader.Size = New System.Drawing.Size(484, 265)
         Me.txtJsonHeader.TabIndex = 10
         Me.txtJsonHeader.Text = resources.GetString("txtJsonHeader.Text")
-        Me.txtJsonHeader.Visible = False
         '
         'TextBox1
         '
@@ -348,18 +356,6 @@ Partial Class frmMain
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.Size = New System.Drawing.Size(484, 119)
         Me.TextBox1.TabIndex = 13
-        Me.TextBox1.Visible = False
-        '
-        'cbxModel
-        '
-        Me.cbxModel.BackColor = System.Drawing.Color.FromArgb(CType(CType(218, Byte), Integer), CType(CType(238, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.cbxModel.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
-        Me.cbxModel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cbxModel.FormattingEnabled = True
-        Me.cbxModel.Location = New System.Drawing.Point(661, 27)
-        Me.cbxModel.Name = "cbxModel"
-        Me.cbxModel.Size = New System.Drawing.Size(316, 27)
-        Me.cbxModel.TabIndex = 17
         '
         'frmMain
         '

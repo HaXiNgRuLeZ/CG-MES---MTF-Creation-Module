@@ -84,8 +84,17 @@
             frmMain.Show()
             Me.Close()
         Else
-            MessageBox.Show("At least one Part Number is required to be selected.", "Part Selection", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            dgvMPN.Focus()
+            'Check for alternate part is selected or not.
+            Dim str As String = frmMain.btnAPN.Text
+            Dim strArr() As String = str.Split(" ")
+            If strArr(0) > 0 Then
+                frmMain.btnMPN.Text = count.ToString + " / " + dgvMPN.Rows.Count.ToString + " Parts Selected"
+                frmMain.Show()
+                Me.Close()
+            Else
+                MessageBox.Show("At least one Part Number is required to be selected.", "Part Selection", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                dgvMPN.Focus()
+            End If
         End If
     End Sub
 

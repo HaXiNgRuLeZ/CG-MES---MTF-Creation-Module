@@ -656,6 +656,10 @@ Public Class frmMain
 
                     Dim str2 As String = ""
 
+                    'check for alternate part
+                    Dim str As String = btnAPN.Text.Trim
+                    Dim strArr() As String = str.Split(" ")
+
                     For Each row As DataGridViewRow In frmMainPN.dgvMPN.Rows
                         If row.Cells("CheckBox").Value = CheckState.Unchecked = False Then
                             Dim str3 As String = txtJsonPN.Text.Trim()
@@ -664,8 +668,12 @@ Public Class frmMain
                             str3 = str3.Replace("[ITEM-NUM]", row.Index + 1)
 
                             str2 += str3
-
+                            MsgBox(row.Index & " + " & frmMainPN.dgvMPN.Rows.Count - 1)
                             If row.Index <> frmMainPN.dgvMPN.Rows.Count - 1 Then
+                                str2 += ","
+                            End If
+
+                            If row.Index = frmMainPN.dgvMPN.Rows.Count - 1 And strArr(0) > 0 Then
                                 str2 += ","
                             End If
                         End If
