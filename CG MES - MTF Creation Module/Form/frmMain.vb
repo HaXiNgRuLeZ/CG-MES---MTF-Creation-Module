@@ -255,12 +255,12 @@ Public Class frmMain
             Dim xlRange As ExcelRange = worksheet.Cells
             If xlRange(1, 1).Text <> "no" Or xlRange(1, 2).Text <> "pn" Or xlRange(1, 3).Text <> "per" Then
                 'MessageBox.Show("Wrong template!", "Import Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                frmAlternatePN.btnImport.Enabled = True ' change here
+                frmAlternatePN.btnImport.Enabled = True
                 Exit Sub
             End If
             If worksheet.Dimension.End.Row < 2 Then
                 'MessageBox.Show("This file contains no data.", "Import Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                frmAlternatePN.btnImport.Enabled = True ' change here
+                frmAlternatePN.btnImport.Enabled = True
                 Exit Sub
             End If
             For Each row In frmAlternatePN.dgvAPN.Rows
@@ -519,23 +519,23 @@ Public Class frmMain
             filePath2 = filePath2.Replace(".xls", ".xlsx")
             If File.Exists(filePath2) Then
                 flagAPN = True
-                frmMainPN.btnImport.Enabled = False   'change here
+                frmAlternatePN.btnImport.Enabled = False
             Else
                 'MessageBox.Show("Excel file not found", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 flagAPN = False
-                frmMainPN.btnImport.Enabled = True   'change here
+                frmAlternatePN.btnImport.Enabled = True
             End If
         End If
 
-        If flagMPN = True And flagAPN = True Then
+        If flagMPN And flagAPN Then
             LoadExcelFile(filePath1, filePath2)
         ElseIf flagMPN Then
-            MsgBox("MPN")
+            'MsgBox("MPN")
         ElseIf flagAPN Then
-            MsgBox("APN")
+            'MsgBox("APN")
         ElseIf flagMPN = False And flagAPN = False Then
             frmMainPN.btnImport.Enabled = True
-            frmMainPN.btnImport.Enabled = True 'change here
+            frmAlternatePN.btnImport.Enabled = True
         End If
     End Sub
 
@@ -668,7 +668,6 @@ Public Class frmMain
                             str3 = str3.Replace("[ITEM-NUM]", row.Index + 1)
 
                             str2 += str3
-                            MsgBox(row.Index & " + " & frmMainPN.dgvMPN.Rows.Count - 1)
                             If row.Index <> frmMainPN.dgvMPN.Rows.Count - 1 Then
                                 str2 += ","
                             End If
