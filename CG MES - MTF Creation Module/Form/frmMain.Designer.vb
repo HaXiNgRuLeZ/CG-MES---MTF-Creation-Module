@@ -331,7 +331,6 @@ Partial Class frmMain
         Me.txtJsonPN.TabIndex = 12
         Me.txtJsonPN.Text = "{""pn"":""[PART-NUM]"",""qty"":""[PART-QTY]"",""dsc"":"""",""out_wh"":"""",""group_id"":"""",""priorit" &
     "y"":""0"",""item"":""[ITEM-NUM]""}"
-        Me.txtJsonPN.Visible = False
         '
         'txtResult
         '
@@ -340,7 +339,6 @@ Partial Class frmMain
         Me.txtResult.Name = "txtResult"
         Me.txtResult.Size = New System.Drawing.Size(484, 265)
         Me.txtResult.TabIndex = 11
-        Me.txtResult.Visible = False
         '
         'txtJsonHeader
         '
@@ -350,7 +348,6 @@ Partial Class frmMain
         Me.txtJsonHeader.Size = New System.Drawing.Size(484, 265)
         Me.txtJsonHeader.TabIndex = 10
         Me.txtJsonHeader.Text = resources.GetString("txtJsonHeader.Text")
-        Me.txtJsonHeader.Visible = False
         '
         'TextBox1
         '
@@ -359,7 +356,6 @@ Partial Class frmMain
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.Size = New System.Drawing.Size(484, 119)
         Me.TextBox1.TabIndex = 13
-        Me.TextBox1.Visible = False
         '
         'frmMain
         '

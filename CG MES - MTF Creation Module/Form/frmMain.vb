@@ -484,7 +484,7 @@ Public Class frmMain
                 btnAPN.Text = "0" & " / " & counter & " Parts Selected"
                 btnAPN.Enabled = True
             Else
-                btnAPN.Text = "---"
+                btnAPN.Text = "0 / 0 Parts Selected"
                 btnAPN.Enabled = False
             End If
             ModelLoadFlag = True
@@ -659,7 +659,8 @@ Public Class frmMain
                     'check for alternate part
                     Dim str As String = btnAPN.Text.Trim
                     Dim strArr() As String = str.Split(" ")
-
+                    'ERROR HERE BCAUSE ROMEO 0CD DONT HAVE ALTERNATE : it's --- NOT 0/0
+                    'FIX FOR NOW
                     For Each row As DataGridViewRow In frmMainPN.dgvMPN.Rows
                         If row.Cells("CheckBox").Value = CheckState.Unchecked = False Then
                             Dim str3 As String = txtJsonPN.Text.Trim()
