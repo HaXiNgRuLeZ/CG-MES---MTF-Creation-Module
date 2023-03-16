@@ -406,7 +406,7 @@ Public Class frmMain
                 btnMPN.Text = counter2 & " / " & counter2 & " Parts Selected"
                 btnMPN.Enabled = True
             Else
-                btnMPN.Text = "---"
+                btnMPN.Text = "0 / 0 Parts Selected"
                 btnMPN.Enabled = False
             End If
             ModelLoadFlag = True
