@@ -312,6 +312,9 @@ Public Class frmMain
 
     Private Sub btnRefresh_Click(sender As Object, e As EventArgs) Handles btnRefresh.Click
         LoadDatatoDGV()
+        LoadModel()
+
+        dgvMTF.ClearSelection()
     End Sub
     'Load ID via cbxModel and Load Data to datagridview
     Private Sub LoadModelID()
