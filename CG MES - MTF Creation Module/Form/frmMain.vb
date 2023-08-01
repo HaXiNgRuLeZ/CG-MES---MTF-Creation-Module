@@ -341,7 +341,7 @@ Public Class frmMain
         Else
             frmMainPN.dgvMPN.Rows.Clear()
             'INSERT MAIN
-            SQL.AddParam("@id", "%" & SelectedModelID & "M%")
+            SQL.AddParam("@id", "%," & SelectedModelID & "M,%")
             SQL.ExecQuery("SELECT part_numbers.pn, part_numbers.pn_dsc, vw_wms_stock.balance_qty " &
                           "FROM part_numbers " &
                           "LEFT OUTER JOIN vw_wms_stock " &
@@ -357,6 +357,7 @@ Public Class frmMain
 
                 For i As Integer = 1 To SQL.RecordCount
                     Dim qty As Integer
+                    Dim tQty As Integer
                     'Dim result As Boolean
 
                     If SQL.DBDT.Rows(i - 1)("balance_qty") Is DBNull.Value Then
@@ -384,7 +385,7 @@ Public Class frmMain
                     Next
                 Next
                 'INSERT LOOSE
-                SQL.AddParam("@id", "%" & SelectedModelID & "M%")
+                SQL.AddParam("@id", "%," & SelectedModelID & "M,%")
                 SQL.ExecQuery("SELECT part_numbers.pn, SUM(materials.qty) as LQ " &
                               "FROM materials " &
                               "INNER JOIN part_numbers " &
@@ -423,7 +424,7 @@ Public Class frmMain
         Else
             frmAlternatePN.dgvAPN.Rows.Clear()
             'INSERT MAIN
-            SQL.AddParam("@id", "%" & SelectedModelID & "A%")
+            SQL.AddParam("@id", "%," & SelectedModelID & "A,%")
             SQL.ExecQuery("SELECT part_numbers.pn, part_numbers.pn_dsc, part_numbers.dsc, " &
                           "vw_wms_stock.balance_qty FROM part_numbers " &
                           "LEFT OUTER JOIN vw_wms_stock " &
@@ -462,7 +463,7 @@ Public Class frmMain
                     Next
                 Next
                 'INSERT LOOSE
-                SQL.AddParam("@id", "%" & SelectedModelID & "A%")
+                SQL.AddParam("@id", "%," & SelectedModelID & "A,%")
                 SQL.ExecQuery("SELECT part_numbers.pn, SUM(materials.qty) as LQ " &
                               "FROM materials " &
                               "INNER JOIN part_numbers " &
@@ -557,6 +558,10 @@ Public Class frmMain
                 'Do Math
                 For Each row As DataGridViewRow In frmMainPN.dgvMPN.Rows
                     row.Cells("Total Quantity").Value = row.Cells("Quantity Per").Value * txtQTY.Text.Trim - row.Cells("Buffer").Value
+
+                    If row.Cells("Total Balance at Store").Value < row.Cells("Total Quantity").Value Then
+                        row.DefaultCellStyle.BackColor = Color.FromArgb(255, 192, 192)
+                    End If
                 Next
             End If
             frmMainPN.Text = "Product Model: " & cbxModel.Text
@@ -580,6 +585,10 @@ Public Class frmMain
                 'Do Math
                 For Each row As DataGridViewRow In frmAlternatePN.dgvAPN.Rows
                     row.Cells("Total Quantity").Value = row.Cells("Quantity Per").Value * txtQTY.Text.Trim - row.Cells("Buffer").Value
+
+                    If row.Cells("Total Balance at Store").Value < row.Cells("Total Quantity").Value Then
+                        row.DefaultCellStyle.BackColor = Color.FromArgb(255, 192, 192)
+                    End If
                 Next
             End If
             frmAlternatePN.Text = "Product Model (Alternate): " & cbxModel.Text
