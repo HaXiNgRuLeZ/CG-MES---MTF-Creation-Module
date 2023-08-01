@@ -341,13 +341,21 @@ Public Class frmMain
         Else
             frmMainPN.dgvMPN.Rows.Clear()
             'INSERT MAIN
-            SQL.AddParam("@id", "%," & SelectedModelID & "M,%")
+            SQL.AddParam("@id", "%" & SelectedModelID & "M%")
             SQL.ExecQuery("SELECT part_numbers.pn, part_numbers.pn_dsc, vw_wms_stock.balance_qty " &
                           "FROM part_numbers " &
                           "LEFT OUTER JOIN vw_wms_stock " &
                           "ON part_numbers.pn = vw_wms_stock.pn " &
-                          "WHERE part_numbers.MesCode LIKE @id " &
+                          "WHERE CONCAT(',', part_numbers.MesCode, ',') LIKE @id " &
                           "ORDER BY part_numbers.pn;")
+
+            'SQL.AddParam("@id", "%" & SelectedModelID & "M%")
+            'SQL.ExecQuery("SELECT part_numbers.pn, part_numbers.pn_dsc, vw_wms_stock.balance_qty " &
+            '              "FROM part_numbers " &
+            '              "LEFT OUTER JOIN vw_wms_stock " &
+            '              "ON part_numbers.pn = vw_wms_stock.pn " &
+            '              "WHERE part_numbers.MesCode LIKE @id " &
+            '              "ORDER BY part_numbers.pn;")
 
             If SQL.HasException(True) Then Exit Sub
 
@@ -390,9 +398,17 @@ Public Class frmMain
                               "FROM materials " &
                               "INNER JOIN part_numbers " &
                               "ON materials.pn = part_numbers.pn " &
-                              "WHERE part_numbers.MesCode LIKE @id AND materials.Cell_id LIKE '%A%' " &
+                              "WHERE CONCAT(',', part_numbers.MesCode, ',') LIKE @id AND materials.Cell_id LIKE '%A%' " &
                               "AND materials.qty < part_numbers.MPQ " &
                               "GROUP BY part_numbers.pn")
+                'SQL.AddParam("@id", "%" & SelectedModelID & "M%")
+                'SQL.ExecQuery("SELECT part_numbers.pn, SUM(materials.qty) as LQ " &
+                '              "FROM materials " &
+                '              "INNER JOIN part_numbers " &
+                '              "ON materials.pn = part_numbers.pn " &
+                '              "WHERE part_numbers.MesCode LIKE @id AND materials.Cell_id LIKE '%A%' " &
+                '              "AND materials.qty < part_numbers.MPQ " &
+                '              "GROUP BY part_numbers.pn")
 
                 If SQL.HasException(True) Then Exit Sub
 
@@ -429,8 +445,16 @@ Public Class frmMain
                           "vw_wms_stock.balance_qty FROM part_numbers " &
                           "LEFT OUTER JOIN vw_wms_stock " &
                           "ON part_numbers.pn = vw_wms_stock.pn " &
-                          "WHERE part_numbers.MesCode LIKE @id " &
+                          "WHERE CONCAT(',', part_numbers.MesCode, ',') LIKE @id " &
                           "ORDER BY part_numbers.pn;")
+
+            'SQL.AddParam("@id", "%" & SelectedModelID & "A%")
+            'SQL.ExecQuery("SELECT part_numbers.pn, part_numbers.pn_dsc, part_numbers.dsc, " &
+            '              "vw_wms_stock.balance_qty FROM part_numbers " &
+            '              "LEFT OUTER JOIN vw_wms_stock " &
+            '              "ON part_numbers.pn = vw_wms_stock.pn " &
+            '              "WHERE part_numbers.MesCode LIKE @id " &
+            '              "ORDER BY part_numbers.pn;")
 
             If SQL.HasException(True) Then Exit Sub
 
@@ -468,9 +492,18 @@ Public Class frmMain
                               "FROM materials " &
                               "INNER JOIN part_numbers " &
                               "ON materials.pn = part_numbers.pn " &
-                              "WHERE part_numbers.MesCode LIKE @id AND materials.Cell_id LIKE '%A%' " &
+                              "WHERE CONCAT(',', part_numbers.MesCode, ',') LIKE @id AND materials.Cell_id LIKE '%A%' " &
                               "AND materials.qty < part_numbers.MPQ " &
                               "GROUP BY part_numbers.pn")
+
+                'SQL.AddParam("@id", "%" & SelectedModelID & "A%")
+                'SQL.ExecQuery("SELECT part_numbers.pn, SUM(materials.qty) as LQ " &
+                '              "FROM materials " &
+                '              "INNER JOIN part_numbers " &
+                '              "ON materials.pn = part_numbers.pn " &
+                '              "WHERE part_numbers.MesCode LIKE @id AND materials.Cell_id LIKE '%A%' " &
+                '              "AND materials.qty < part_numbers.MPQ " &
+                '              "GROUP BY part_numbers.pn")
 
                 If SQL.HasException(True) Then Exit Sub
 
@@ -655,7 +688,7 @@ Public Class frmMain
                 Try
                     Cursor.Current = Cursors.WaitCursor
                     txtResult.Text = "POSTing..."
-                    Dim guid As Guid = Guid.NewGuid()
+                    Dim guid As Guid = guid.NewGuid()
 
                     Dim str1 As String = txtJsonHeader.Text.Trim()
                     str1 = str1.Replace("[SESSION-ID]", guid.ToString("N"))
