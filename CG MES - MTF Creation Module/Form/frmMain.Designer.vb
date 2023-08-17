@@ -25,6 +25,8 @@ Partial Class frmMain
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMain))
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.cbxAllowMoreJO = New System.Windows.Forms.CheckBox()
+        Me.cbxAllowMoreMTF = New System.Windows.Forms.CheckBox()
         Me.cbxModel = New CG_MES___MTF_Creation_Module.CenteredComboBox()
         Me.btnAPN = New System.Windows.Forms.Button()
         Me.btnMPN = New System.Windows.Forms.Button()
@@ -74,6 +76,8 @@ Partial Class frmMain
         Me.GroupBox1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GroupBox1.Controls.Add(Me.cbxAllowMoreJO)
+        Me.GroupBox1.Controls.Add(Me.cbxAllowMoreMTF)
         Me.GroupBox1.Controls.Add(Me.cbxModel)
         Me.GroupBox1.Controls.Add(Me.btnAPN)
         Me.GroupBox1.Controls.Add(Me.btnMPN)
@@ -95,6 +99,24 @@ Partial Class frmMain
         Me.GroupBox1.TabIndex = 1
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "MTF - Create New Material Requisition"
+        '
+        'cbxAllowMoreJO
+        '
+        Me.cbxAllowMoreJO.AutoSize = True
+        Me.cbxAllowMoreJO.Location = New System.Drawing.Point(475, 35)
+        Me.cbxAllowMoreJO.Name = "cbxAllowMoreJO"
+        Me.cbxAllowMoreJO.Size = New System.Drawing.Size(15, 14)
+        Me.cbxAllowMoreJO.TabIndex = 19
+        Me.cbxAllowMoreJO.UseVisualStyleBackColor = True
+        '
+        'cbxAllowMoreMTF
+        '
+        Me.cbxAllowMoreMTF.AutoSize = True
+        Me.cbxAllowMoreMTF.Location = New System.Drawing.Point(475, 72)
+        Me.cbxAllowMoreMTF.Name = "cbxAllowMoreMTF"
+        Me.cbxAllowMoreMTF.Size = New System.Drawing.Size(15, 14)
+        Me.cbxAllowMoreMTF.TabIndex = 18
+        Me.cbxAllowMoreMTF.UseVisualStyleBackColor = True
         '
         'cbxModel
         '
@@ -424,4 +446,6 @@ Partial Class frmMain
     Friend WithEvents txtResult As TextBox
     Friend WithEvents txtJsonHeader As TextBox
     Friend WithEvents TextBox1 As TextBox
+    Friend WithEvents cbxAllowMoreMTF As CheckBox
+    Friend WithEvents cbxAllowMoreJO As CheckBox
 End Class

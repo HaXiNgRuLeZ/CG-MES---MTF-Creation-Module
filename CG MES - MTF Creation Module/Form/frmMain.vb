@@ -688,7 +688,7 @@ Public Class frmMain
                 Try
                     Cursor.Current = Cursors.WaitCursor
                     txtResult.Text = "POSTing..."
-                    Dim guid As Guid = guid.NewGuid()
+                    Dim guid As Guid = Guid.NewGuid()
 
                     Dim str1 As String = txtJsonHeader.Text.Trim()
                     str1 = str1.Replace("[SESSION-ID]", guid.ToString("N"))
@@ -756,6 +756,22 @@ Public Class frmMain
             End If
 
             ModelLoadFlag = False
+        End If
+    End Sub
+
+    Private Sub cbxAllowMore_CheckedChanged(sender As Object, e As EventArgs) Handles cbxAllowMoreMTF.CheckedChanged
+        If cbxAllowMoreMTF.Checked Then
+            txtMTF.MaxLength = 16
+        Else
+            txtMTF.MaxLength = 12
+        End If
+    End Sub
+
+    Private Sub cbxAllowMoreJO_CheckedChanged(sender As Object, e As EventArgs) Handles cbxAllowMoreJO.CheckedChanged
+        If cbxAllowMoreJO.Checked Then
+            txtJOB.MaxLength = 15
+        Else
+            txtJOB.MaxLength = 11
         End If
     End Sub
 End Class
