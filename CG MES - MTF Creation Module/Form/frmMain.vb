@@ -1,8 +1,6 @@
-﻿Imports Microsoft.VisualBasic.CompilerServices
-Imports System.IO
+﻿Imports System.IO
 Imports OfficeOpenXml
 Imports System.Net
-Imports System.Text
 
 
 Public Class frmMain
@@ -15,17 +13,14 @@ Public Class frmMain
     Private ModelLoadFlag As Boolean
     Private SelectedModelID As Integer
     Public Sub New()
-        ' This call is required by the designer.'
         InitializeComponent()
-        ' Add any initialization after the InitializeComponent() call.'
-        'Form'
+
         Me.Text = String.Empty
         Me.ControlBox = False
         Me.DoubleBuffered = True
         Me.MaximizedBounds = Screen.PrimaryScreen.WorkingArea
     End Sub
 
-    'Private Function SendRequest(ByVal uri As Uri, ByVal jsonDataBytes As Byte(), ByVal contentType As String, ByVal method As String) As String
     Public Function SendRequest(ByVal uri As Uri, ByVal jsonData As String, ByVal contentType As String, ByVal method As String) As String
         Dim str As String = ""
         Cursor.Current = Cursors.WaitCursor
@@ -131,7 +126,7 @@ Public Class frmMain
         dgv.Columns("Loose Quantity").ReadOnly = True
         dgv.Columns("Total Balance at Store").ReadOnly = True
         dgv.Columns("Quantity Per").ReadOnly = True
-        dgv.Columns("Total Quantity").ReadOnly = True
+        'dgv.Columns("Total Quantity").ReadOnly = True
 
         dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         dgv.AutoResizeColumns()
@@ -341,7 +336,7 @@ Public Class frmMain
         Else
             frmMainPN.dgvMPN.Rows.Clear()
             'INSERT MAIN
-            SQL.AddParam("@id", "%" & SelectedModelID & "M%")
+            SQL.AddParam("@id", "%," & SelectedModelID & "M,%")
             SQL.ExecQuery("SELECT part_numbers.pn, part_numbers.pn_dsc, vw_wms_stock.balance_qty " &
                           "FROM part_numbers " &
                           "LEFT OUTER JOIN vw_wms_stock " &

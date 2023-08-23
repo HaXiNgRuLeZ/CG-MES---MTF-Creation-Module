@@ -1,6 +1,5 @@
 ﻿Public Class frmMainPN
     Public SQL As New SQLControl
-    Private Sort As String
     Private Sub frmMainPN_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Show()
         Cursor.Current = Cursors.WaitCursor
@@ -109,6 +108,7 @@
             End If
         Next
     End Sub
+
 
     Private Sub dgvMPN_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvMPN.KeyDown
         If e.KeyCode = Keys.Space Then
